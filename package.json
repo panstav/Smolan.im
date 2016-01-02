@@ -1,0 +1,19 @@
+{
+  "name": "smolanim",
+  "version": "0.0.0",
+  "description": "Israeli Leftist Articles Aggregator",
+  "main": "index.js",
+  "dependencies": {
+    "async": "1.5.0",
+    "cheerio": "0.19.0",
+    "got": "5.3.0",
+    "moment": "2.10.6",
+    "require-dir": "0.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stav Geffen <stavgeffen@gmail.com>",
+  "license": "ISC"
+}
