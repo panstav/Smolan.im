@@ -5,6 +5,8 @@ var moment = require('moment');
 
 var common = require('./../common');
 
+let domain = 'http://www.haaretz.co.il';
+
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
@@ -19,12 +21,13 @@ module.exports = (res, cb) => {
 		let mainHeadline = {
 			title: $('h1', container).text(),
 			url: $('h1', container).parent().attr('href'),
-			//authorName: $('.post_details a[rel="author"]', container).text(),
-			//authorUrl: $('.post_details a[rel="author"]', container).attr('href'),
+			image: $('picture img', container).attr('srcset'),
 			date: $('.t-byline time', container).attr('datetime')
 		};
 
-		mainHeadline.url = 'http://www.haaretz.co.il' + mainHeadline.url;
+		mainHeadline.url = domain + mainHeadline.url;
+		mainHeadline.image = domain + mainHeadline.image;
+
 		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentInputFormat);
 
 		return mainHeadline;
@@ -35,12 +38,13 @@ module.exports = (res, cb) => {
 		let mainHeadline = {
 			title: $('.media__content h3', container).text().replace(/[\n\t\r]/g,'').trim(),
 			url: $('a.media', container).attr('href'),
-			//authorName: $('.post_details a[rel="author"]', container).text(),
-			//authorUrl: $('.post_details a[rel="author"]', container).attr('href'),
+			image: $('picture img', container).attr('srcset'),
 			date: $('.t-byline time', container).attr('datetime')
 		};
 
-		mainHeadline.url = 'http://www.haaretz.co.il' + mainHeadline.url;
+		mainHeadline.url = domain + mainHeadline.url;
+		mainHeadline.image = domain + mainHeadline.image;
+
 		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentInputFormat);
 
 		return mainHeadline;
@@ -52,4 +56,4 @@ module.exports = (res, cb) => {
 
 };
 
-module.exports.url = 'http://www.haaretz.co.il/news';
+module.exports.url = domain + '/news';

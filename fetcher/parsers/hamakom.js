@@ -5,6 +5,8 @@ var moment = require('moment');
 
 var common = require('./../common');
 
+let domain = 'http://www.ha-makom.co.il';
+
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
@@ -18,17 +20,16 @@ module.exports = (res, cb) => {
 		let mainHeadline = {
 			title: $('h2.post-title', container).text(),
 			url: $('h2.post-title a', container).attr('href'),
-			//authorName: $('span.post-author a', container).text(),
-			//authorUrl: $('span.post-author a', container).attr('href'),
+			image: $('a img', container).attr('src'),
 			date: $('span.post-date', container).text()
 		};
 
-		mainHeadline.url = 'http://www.ha-makom.co.il' + mainHeadline.url;
-		mainHeadline.authorUrl = 'http://www.ha-makom.co.il' + mainHeadline.url;
+		mainHeadline.url = domain + mainHeadline.url;
+		mainHeadline.authorUrl = domain + mainHeadline.url;
 
 		return mainHeadline;
 	}
 
 };
 
-module.exports.url = 'http://www.ha-makom.co.il/articles';
+module.exports.url = domain + '/articles';

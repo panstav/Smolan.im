@@ -18,8 +18,7 @@ module.exports = (res, cb) => {
 		let mainHeadline = {
 			title: $('h2', container).text(),
 			url: $('h2', container).parent().attr('href'),
-			//authorName: $('.post_details a[rel="author"]', container).text(),
-			//authorUrl: $('.post_details a[rel="author"]', container).attr('href'),
+			image: $('a img', container).attr('src'),
 			date: $('.post_details time', container).text()
 		};
 

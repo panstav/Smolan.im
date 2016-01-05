@@ -18,9 +18,8 @@ module.exports = (res, cb) => {
 
 		let mainHeadline = {
 			title: $('h2', container).text(),
+			image: $('a img', container).attr('src'),
 			url: $('h2', container).parent().attr('href'),
-			//authorName: $('.post_details a[rel="author"]', container).text(),
-			//authorUrl: $('.post_details a[rel="author"]', container).attr('href'),
 			date: $('.post_details time', container).text()
 		};
 
@@ -33,6 +32,7 @@ module.exports = (res, cb) => {
 
 		let mainHeadline = {
 			title: $('h3', container).text(),
+			image: $('a img', container).attr('src'),
 			url: $('h3', container).parent().attr('href'),
 			//authorName: $('.post_details a[rel="author"]', container).text(),
 			//authorUrl: $('.post_details a[rel="author"]', container).attr('href'),

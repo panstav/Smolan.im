@@ -18,6 +18,7 @@ module.exports = (res, cb) => {
 		let mainHeadline = {
 			title: $('h2 a', container).text().replace(/[\n\t\r]/g,''),
 			url: $('h2 a', container).attr('href'),
+			image: $('img.wp-post-image', container).attr('src'),
 			date: $('span.tax_date', container).text().substr(12)
 		};
 

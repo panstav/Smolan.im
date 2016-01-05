@@ -15,5 +15,10 @@ html(lang="he")
 				li
 
 					a(href=item.url, title=item.title, target="_blank")
-						span.date= item.date
-						h3= item.title
+
+						if item.image
+							.image(style="background-image: url(#{ item.image })")
+
+						.details
+							span.date= item.date
+							h3= item.title
