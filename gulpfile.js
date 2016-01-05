@@ -26,4 +26,4 @@ gulp.task('jade-to-html', () => {
 
 });
 
-gulp.task('build', ['sass-to-css', 'jade-to-html']);
+gulp.task('build', plugins.sequence('sass-to-css', 'jade-to-html'));
