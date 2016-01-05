@@ -6,6 +6,8 @@ var requireDir = require('require-dir');
 var async = require('async');
 var got = require('got');
 
+var jsonfile = require('jsonfile');
+
 // turn js files in parsers/ to method of this object
 var parsers = requireDir('parsers');
 
@@ -15,8 +17,10 @@ let tasks = constructTasks();
 // execute parallel tasks and callback
 executeTasks(tasks, (err, results) => {
 	if (err) return console.error(err);
-	
-	console.log('\n', typeof results, 'results', results, '\n');
+
+	jsonfile.writeFile('../db.json', results, {spaces: 2}, err => {
+		if (err) return console.error(err);
+	});
 });
 
 function constructTasks(){
