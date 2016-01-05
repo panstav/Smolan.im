@@ -20,9 +20,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "postinstall": "npm run fetch && npm run build",
+    "postinstall": "npm run refresh",
     "local": "node index.js",
-    "fetch": "node fetcher/index.js",
+    "refresh": "node fetcher/index.js && npm run build",
     "build": "./node_modules/.bin/gulp build"
   },
   "author": "Stav Geffen <stavgeffen@gmail.com>",
