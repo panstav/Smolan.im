@@ -1,0 +1,19 @@
+doctype html
+html(lang="he")
+
+	head
+		title שמאלנים - ויש נקודה.
+
+		style
+			include ../public/styles.css
+
+	body
+
+		ul.A4
+			each item in db
+
+				li
+
+					a(href=item.url, title=item.title, target="_blank")
+						span.date= item.date
+						h3= item.title
