@@ -23,7 +23,7 @@ module.exports = (res, cb) => {
 			date: $('.post_details time', container).text()
 		};
 
-		mainHeadline.date = moment(mainHeadline.date, 'D.M.YYYY').format(common.momentFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'D.M.YYYY').format(common.momentInputFormat);
 
 		return mainHeadline;
 	}

@@ -25,7 +25,7 @@ module.exports = (res, cb) => {
 		};
 
 		mainHeadline.url = 'http://www.haaretz.co.il' + mainHeadline.url;
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentInputFormat);
 
 		return mainHeadline;
 	}
@@ -41,7 +41,7 @@ module.exports = (res, cb) => {
 		};
 
 		mainHeadline.url = 'http://www.haaretz.co.il' + mainHeadline.url;
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentInputFormat);
 
 		return mainHeadline;
 	}

@@ -1,65 +1,35 @@
-'use strict';
+var jsonfile = require('jsonfile');
+var moment = require('moment');
 
 var common = require('./common');
 
-var requireDir = require('require-dir');
-var async = require('async');
-var got = require('got');
+var getHeadlines = require('./get-headlines');
 
-var jsonfile = require('jsonfile');
+getHeadlines((err, headlines) => {
+	if (err) return console.log(err);
 
-// turn js files in parsers/ to method of this object
-var parsers = requireDir('./parsers');
+	var sortedHeadlines = headlines
+		.sort(byDate) // sort by descending date
+		.map(dateToHuman); // transform date to human format
 
-// map parser to task
-let tasks = constructTasks();
-
-// execute parallel tasks and callback
-executeTasks(tasks, (err, results) => {
-	if (err) return console.error(err);
-
-	jsonfile.writeFile('./db.json', results, {spaces: 2}, err => {
+	// write headlines to db
+	jsonfile.writeFile('./db.json', sortedHeadlines, {spaces: 2}, err => {
 		if (err) return console.error(err);
 	});
 });
 
-function constructTasks(){
-
-	// set user-agent
-	let gotOptions = { headers: { 'user-agent': `SmonalimBot/0.0 (+http://smolan.im)` } };
-
-	// turn parsers into tasks
-	let tasks = [];
-	for (let key in parsers){
-		tasks.push(parserToTask(parsers[key]));
+function byDate(a, b){
+	if (moment(a.date, common.momentInputFormat)
+			.isBefore(
+				moment(b.date, common.momentInputFormat))){
+		return 1;
 	}
 
-	return tasks;
-
-	function parserToTask(parser){
-		return done => {
-
-			got(parser.url, gotOptions).then(res => { parser(res, done); }).catch(err => {
-				console.log(err);
-			});
-
-		}
-	}
-
+	return -1;
 }
 
-function executeTasks(tasks, cb){
+function dateToHuman(item){
+	item.date = moment(item.date, common.momentInputFormat).format(common.momentOutputFormat);
 
-	// scrap every site in parralel, parsing it with
-	async.parallel(tasks, (err, arrays) => {
-		if (err) return cb(err);
-
-		// flatten array
-		let results = [];
-		arrays.forEach(arr => { arr.forEach(item => { results.push(item); }); });
-
-		// output
-		cb(null, results)
-	});
-
+	return item;
 }

@@ -1,3 +1,4 @@
 module.exports = {
-	momentFormat: 'DD/MM'
+	momentInputFormat: 'DD/MM/YYYY',
+	momentOutputFormat: 'DD/MM'
 };

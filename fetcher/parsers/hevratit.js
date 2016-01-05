@@ -21,7 +21,7 @@ module.exports = (res, cb) => {
 			date: $('span.tax_date', container).text().substr(12)
 		};
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD/MM/YYYY').format(common.momentFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD/MM/YYYY').format(common.momentInputFormat);
 
 		return mainHeadline;
 	}
