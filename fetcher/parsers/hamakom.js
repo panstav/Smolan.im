@@ -1,7 +1,9 @@
 'use strict';
 
 var cheerio = require('cheerio');
+
 var moment = require('moment');
+moment.locale('he');
 
 var common = require('./../common');
 
@@ -26,6 +28,8 @@ module.exports = (res, cb) => {
 
 		mainHeadline.url = domain + mainHeadline.url;
 		mainHeadline.authorUrl = domain + mainHeadline.url;
+
+		mainHeadline.date = moment(mainHeadline.date.replace('\'', '׳'), 'DD MMM, YYYY').format(common.momentInputFormat);
 
 		return mainHeadline;
 	}
