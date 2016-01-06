@@ -5,8 +5,11 @@ var common = require('./common');
 
 var getHeadlines = require('./get-headlines');
 
+console.time('Scraping for headlines.');
 getHeadlines((err, headlines) => {
 	if (err) return console.log(err);
+
+	console.timeEnd('Scraping for headlines.');
 
 	var sortedHeadlines = headlines
 		.sort(byDate) // sort by descending date
@@ -15,6 +18,8 @@ getHeadlines((err, headlines) => {
 	// write headlines to db
 	jsonfile.writeFile('./db.json', sortedHeadlines, {spaces: 2}, err => {
 		if (err) return console.error(err);
+		
+		console.log('Scraping done.');
 	});
 });
 
