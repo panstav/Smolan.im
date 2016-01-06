@@ -51,7 +51,9 @@ module.exports = (res, cb) => {
 	}
 
 	function premiumArticle(i, elem){
-		return !$('.t-byline .icn--key', elem).get();
+		let keyIcons = $('.t-byline .icn--key', elem).get();
+
+		return keyIcons.length > 0;
 	}
 
 };
