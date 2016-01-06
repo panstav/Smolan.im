@@ -2,6 +2,8 @@
 
 var express = require('express');
 
+var fetcher = require('../fetcher');
+
 // Start a new server, set it up and return it.
 module.exports.init = () => {
 
@@ -11,6 +13,19 @@ module.exports.init = () => {
 	// register main route
 	server.get('/', (req, res) => {
 		res.sendFile('index.html', { root: 'public', maxAge: 1000*60*30 });
+	});
+
+	// register fetcher jon initiator
+	server.get('/run-fetcher', (req, res) => {
+		fetcher(err => {
+			if (err){
+				console.error(err);
+
+				return res.status(500).end();
+			}
+			
+			res.status(200).end();
+		});
 	});
 
 	// Serve static files
