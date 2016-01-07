@@ -37,6 +37,19 @@ module.exports.init = () => {
 		res.sendFile('index.html', { root: 'public', maxAge: 1000*60*30 });
 	});
 
+	// register redirection route
+	server.get('/redirect', (req, res, next) => {
+
+		let redirectRequest = req.query.url;
+
+		if (redirectRequest){
+			return res.redirect(301, redirectRequest);
+		}
+
+		// continue by stack if didn't find a 'url' query
+		next();
+	});
+
 	// register fetcher job initiator
 	server.get('/run-fetcher', rateLimiter, (req, res) => {
 

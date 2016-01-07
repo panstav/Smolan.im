@@ -11,6 +11,7 @@ module.exports = () => {
 
 	console.time('Scraping for headlines.');
 
+	// return promise of sortedHeadlines
 	return getHeadlines().then(sortAndSaveHeadlines);
 
 };
@@ -25,6 +26,13 @@ function sortAndSaveHeadlines(headlines){
 
 			// sort by descending date
 			.sort(byDate)
+
+			// turn url into a
+			.map(headline => {
+				headline.url = 'http://localhost:3000/redirect?url=' + headline.url;
+
+				return headline;
+			})
 
 			// categorize by today, yesterday and this week
 			.reduce(todayYesterdayAndThisWeek, { today: [], yesterday: [], thisWeek: [] });
