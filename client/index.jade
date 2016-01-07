@@ -25,16 +25,64 @@ html(lang="he")
 				span &nbsp;-&nbsp;
 				.tagline ויש נקודה.
 
-		ul.A4
-			each item in db
+		ol.A4
 
-				li
+			if categorizedDB.today.length > 0
 
-					a(href=item.url, title=item.title, target="_blank")
+				li.today
 
-						if item.image
-							.image(style="background-image: url(#{ item.image })")
+					h2 היום
 
-						.details
-							span.date= item.date
-							h3= item.title
+					ul.headlines
+						each item in categorizedDB.today
+
+							li
+
+								if item.image
+									a(href=item.url, title=item.title, target="_blank")
+										.image(style="background-image: url(#{ item.image })")
+
+								.details
+									span.date= item.date
+									a(href=item.url, title=item.title, target="_blank")
+										h3= item.title
+
+			if categorizedDB.yesterday.length > 0
+
+				li.yesterday
+
+					h2 אתמול
+
+					ul.headlines
+						each item in categorizedDB.yesterday
+
+							li
+
+								if item.image
+									a(href=item.url, title=item.title, target="_blank")
+										.image(style="background-image: url(#{ item.image })")
+
+								.details
+									span.date= item.date
+									a(href=item.url, title=item.title, target="_blank")
+										h3= item.title
+
+			if categorizedDB.thisWeek.length > 0
+
+				li.this-week
+
+					h2 השבוע
+
+					ul.headlines
+						each item in categorizedDB.thisWeek
+
+							li
+
+								if item.image
+									a(href=item.url, title=item.title, target="_blank")
+										.image(style="background-image: url(#{ item.image })")
+
+								.details
+									span.date= item.date
+									a(href=item.url, title=item.title, target="_blank")
+										h3= item.title

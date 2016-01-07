@@ -3,7 +3,7 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 
-var db = require('./db.json');
+var categorizedDB = require('./db.json');
 
 gulp.task('prep-public-dir', () => {
 
@@ -24,7 +24,7 @@ gulp.task('sass-to-css', () => {
 gulp.task('jade-to-html', () => {
 
 	let locals = {
-		db
+		categorizedDB
 	};
 
 	return gulp.src('client/index.jade')
