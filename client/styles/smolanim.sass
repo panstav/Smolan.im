@@ -1,8 +1,24 @@
+header
+	background-color: $ui
+
+.logo, .tagline, span
+	display: inline-block
+	vertical-align: baseline
+	color: $text
+
+.logo
+	font-size: 2em
+	margin: 0
+	padding-left: .2em
+
+.tagline
+	font-size: .8em
+
 li
 	@include clear-fix
 
 	padding: 1em 0
-	border-bottom: 3px solid darken($background, 10%)
+	border-bottom: .3em solid $ui
 
 .image
 	display: inline-block
