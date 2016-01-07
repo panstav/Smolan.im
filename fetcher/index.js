@@ -5,17 +5,11 @@ var common = require('./common');
 
 var getHeadlines = require('./get-headlines');
 
-module.exports = done => {
-
-	// default callback to
-	if (!done) done = console.error.bind(console);
+module.exports = () => {
 
 	console.time('Scraping for headlines.');
 
-	getHeadlines()
-		.then(sortAndSaveHeadlines)
-		.then(done)
-		.catch(err => done(err));
+	return getHeadlines().then(sortAndSaveHeadlines);
 
 };
 

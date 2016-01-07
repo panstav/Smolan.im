@@ -2,7 +2,7 @@
 
 var express = require('express');
 
-var fetcher = require('../fetcher');
+var fetch = require('../fetcher');
 
 // Start a new server, set it up and return it.
 module.exports.init = () => {
@@ -15,17 +15,17 @@ module.exports.init = () => {
 		res.sendFile('index.html', { root: 'public', maxAge: 1000*60*30 });
 	});
 
-	// register fetcher jon initiator
+	// register fetcher job initiator
 	server.get('/run-fetcher', (req, res) => {
-		fetcher(err => {
-			if (err){
+
+		fetch()
+			.then(() => { res.status(200).end(); })
+			.catch(err => {
 				console.error(err);
 
 				return res.status(500).end();
-			}
-			
-			res.status(200).end();
-		});
+			});
+
 	});
 
 	// Serve static files
