@@ -7,11 +7,21 @@ var getHeadlines = require('./get-headlines');
 
 module.exports = done => {
 
+	// default callback to
 	if (!done) done = console.error.bind(console);
 
 	console.time('Scraping for headlines.');
-	getHeadlines((err, headlines) => {
-		if (err) return done(err);
+
+	getHeadlines()
+		.then(sortAndSaveHeadlines)
+		.then(done)
+		.catch(err => done(err));
+
+};
+
+function sortAndSaveHeadlines(headlines){
+
+	return new Promise((resolve, reject) => {
 
 		console.timeEnd('Scraping for headlines.');
 
@@ -21,16 +31,13 @@ module.exports = done => {
 
 		// write headlines to db
 		jsonfile.writeFile('./db.json', sortedHeadlines, {spaces: 2}, err => {
-			if (err) return done(err);
+			if (err) return reject(err);
 
-			console.log('Scraping done.');
-
-			done();
+			resolve(sortedHeadlines);
 		});
 	});
 
-};
-
+}
 
 function byDate(a, b){
 	if (moment(a.date, common.momentInputFormat)

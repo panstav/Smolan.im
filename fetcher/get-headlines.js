@@ -9,13 +9,15 @@ var common = require('./common');
 var requireDir = require('require-dir');
 var parsers = requireDir('./parsers');
 
-module.exports = done => {
+module.exports = () => new Promise(fetchHeadlines);
 
-	// map parser to task
+function fetchHeadlines(resolve, reject){
+
+	// map parsers to tasks
 	let tasks = constructTasks();
 
 	// execute parallel tasks and callback
-	executeTasks(tasks, done);
+	executeTasks(tasks);
 
 	function constructTasks(){
 
@@ -31,29 +33,29 @@ module.exports = done => {
 		return tasks;
 
 		function parserToTask(parser){
+
 			return done => {
-				got(parser.url, gotOptions).then(res => { parser(res, done); }).catch(err => {
-					console.log(err);
-				});
+				got(parser.url, gotOptions).then(res => { parser(res, done); }).catch(err => reject(err));
 			}
+
 		}
 
 	}
 
-	function executeTasks(tasks, cb){
+	function executeTasks(tasks){
 
 		// scrap every site in parralel, parsing it with
 		async.parallel(tasks, (err, arrays) => {
-			if (err) return cb(err);
+			if (err) return reject(err);
 
 			// flatten array
 			let results = [];
 			arrays.forEach(arr => { arr.forEach(item => { results.push(item); }); });
 
 			// output
-			cb(null, results)
+			resolve(results);
 		});
 
 	}
 
-};
+}
