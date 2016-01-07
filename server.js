@@ -2,7 +2,7 @@
 
 var express = require('express');
 
-var fetch = require('../fetcher');
+var fetch = require('./fetcher/index');
 
 // Start a new server, set it up and return it.
 module.exports.init = () => {

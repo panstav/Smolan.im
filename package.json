@@ -22,7 +22,7 @@
   "devDependencies": {},
   "scripts": {
     "postinstall": "npm run refresh",
-    "local": "node index.js",
+    "local": "LOCAL=true node index.js",
     "refresh": "node fetcher/run.js && npm run build",
     "build": "./node_modules/.bin/gulp build"
   },
