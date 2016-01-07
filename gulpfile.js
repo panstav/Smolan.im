@@ -5,6 +5,13 @@ var plugins = require('gulp-load-plugins')();
 
 var db = require('./db.json');
 
+gulp.task('prep-public-dir', () => {
+
+	return gulp.src('client/font-carmela/*', { base: './client' })
+		.pipe(gulp.dest('public'));
+
+});
+
 gulp.task('sass-to-css', () => {
 
 	return gulp.src('client/index.sass')
@@ -26,4 +33,4 @@ gulp.task('jade-to-html', () => {
 
 });
 
-gulp.task('build', plugins.sequence('sass-to-css', 'jade-to-html'));
+gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'jade-to-html'));

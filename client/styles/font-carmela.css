@@ -1,0 +1,14 @@
+@font-face {
+	font-family: 'Carmela';
+	src: url('/font-carmela/carmela.eot');
+	src: url('/font-carmela/carmela.eot?#iefix') format('embedded-opentype'),
+	url('/font-carmela/carmela.woff') format('woff'),
+	url('/font-carmela/carmela.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: 'Carmela', sans-serif;
+	letter-spacing: 0.05em;
+}
