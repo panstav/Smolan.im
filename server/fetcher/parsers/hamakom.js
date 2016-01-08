@@ -5,8 +5,6 @@ var cheerio = require('cheerio');
 var moment = require('moment');
 moment.locale('he');
 
-var common = require('./../common');
-
 let domain = 'http://www.ha-makom.co.il';
 
 module.exports = (res, cb) => {
@@ -29,7 +27,7 @@ module.exports = (res, cb) => {
 		mainHeadline.url = domain + mainHeadline.url;
 		mainHeadline.authorUrl = domain + mainHeadline.url;
 
-		mainHeadline.date = moment(mainHeadline.date.replace('\'', '׳'), 'DD MMM, YYYY').format(common.momentInputFormat);
+		mainHeadline.date = moment(mainHeadline.date.replace('\'', '׳'), 'DD MMM, YYYY').toDate();
 
 		return mainHeadline;
 	}

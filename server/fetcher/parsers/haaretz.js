@@ -3,8 +3,6 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
-var common = require('./../common');
-
 let domain = 'http://www.haaretz.co.il';
 
 module.exports = (res, cb) => {
@@ -28,7 +26,7 @@ module.exports = (res, cb) => {
 		mainHeadline.url = domain + mainHeadline.url;
 		mainHeadline.image = domain + mainHeadline.image;
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentInputFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').toDate();
 
 		return mainHeadline;
 	}
@@ -45,7 +43,7 @@ module.exports = (res, cb) => {
 		mainHeadline.url = domain + mainHeadline.url;
 		mainHeadline.image = domain + mainHeadline.image;
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').format(common.momentInputFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').toDate();
 
 		return mainHeadline;
 	}

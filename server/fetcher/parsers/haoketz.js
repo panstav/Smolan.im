@@ -3,8 +3,6 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
-var common = require('./../common');
-
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
@@ -23,7 +21,7 @@ module.exports = (res, cb) => {
 			date: $('.post_details time', container).text()
 		};
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').format(common.momentInputFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').toDate();
 
 		return mainHeadline;
 	}
@@ -34,12 +32,10 @@ module.exports = (res, cb) => {
 			title: $('h3', container).text(),
 			image: $('a img', container).attr('src'),
 			url: $('h3', container).parent().attr('href'),
-			//authorName: $('.post_details a[rel="author"]', container).text(),
-			//authorUrl: $('.post_details a[rel="author"]', container).attr('href'),
 			date: $('.post_details time', container).text()
 		};
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').format(common.momentInputFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').toDate();
 
 		return mainHeadline;
 	}

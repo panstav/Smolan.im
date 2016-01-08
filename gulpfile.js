@@ -3,7 +3,10 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 
-var categorizedDB = require('./db.json');
+var optional = require('optional');
+var moment = require('moment');
+
+var db = require('./server/db');
 
 gulp.task('prep-public-dir', () => {
 
@@ -21,15 +24,35 @@ gulp.task('sass-to-css', () => {
 
 });
 
-gulp.task('jade-to-html', () => {
+gulp.task('jade-to-html', done => {
 
-	let locals = {
-		categorizedDB
-	};
+	let env = optional('./env');
+	if (env) process.env.MONGO_URI = env.MONGO_URI;
 
-	return gulp.src('client/index.jade')
-		.pipe(plugins.jade({ locals }))
-		.pipe(gulp.dest('public'));
+	db.init(process.env.MONGO_URI)
+		.then(db.getSortedHeadlines)
+		.then(compile)
+		.then(db.close)
+		.then(done)
+		.catch(done);
+
+	function compile(sortedHeadlines){
+
+		return new Promise((resolve, reject) => {
+
+			let locals = {
+				categorizedDB: sortedHeadlines
+			};
+
+			gulp.src('client/index.jade')
+				.pipe(plugins.jade({ locals }))
+				.pipe(gulp.dest('public'))
+				.on('error', reject)
+				.on('end', resolve);
+
+		});
+
+	}
 
 });
 

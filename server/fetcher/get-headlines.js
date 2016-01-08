@@ -3,15 +3,13 @@
 var async = require('async');
 var got = require('got');
 
-var common = require('./common');
+var common = require('../../common');
 
 // turn js files in parsers/ to method of this object
 var requireDir = require('require-dir');
 var parsers = requireDir('./parsers');
 
-module.exports = () => new Promise(fetchHeadlines);
-
-function fetchHeadlines(resolve, reject){
+module.exports = () => new Promise((resolve, reject) => {
 
 	// map parsers to tasks
 	let tasks = constructTasks();
@@ -44,7 +42,7 @@ function fetchHeadlines(resolve, reject){
 
 	function executeTasks(tasks){
 
-		// scrap every site in parralel, parsing it with
+		// scrap every site in parallel, parsing it with
 		async.parallel(tasks, (err, arrays) => {
 			if (err) return reject(err);
 
@@ -55,7 +53,6 @@ function fetchHeadlines(resolve, reject){
 			// output
 			resolve(results);
 		});
-
 	}
 
-}
+});

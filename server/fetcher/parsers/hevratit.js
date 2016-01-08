@@ -3,8 +3,6 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
-var common = require('./../common');
-
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
@@ -22,7 +20,7 @@ module.exports = (res, cb) => {
 			date: $('span.tax_date', container).text().substr(12)
 		};
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD/MM/YYYY').format(common.momentInputFormat);
+		mainHeadline.date = moment(mainHeadline.date, 'DD/MM/YYYY').toDate();
 
 		return mainHeadline;
 	}

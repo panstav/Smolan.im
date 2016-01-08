@@ -2,5 +2,8 @@
 
 /node_modules/
 
-/db.json
-npm-debug.log
+/db/headlines.json
+/env.js
+
+/dump.rdb
+/npm-debug.log
