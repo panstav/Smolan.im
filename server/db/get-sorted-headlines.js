@@ -15,26 +15,17 @@ function sortedHeadlinesPromise(resolve, reject){
 
 	var headlineModel = mongoose.model('headline');
 
-	let firstDayOfThisWeek = moment()
+	let lastSevenDays = moment().subtract(7, 'days')
+		.set('hour', 0).set('minute', 0).set('second', 0) // go to beginning of that day
+		.toDate();                                        // return Date object
 
-	// go to beginning of week
-		.subtract(moment().day(), 'days')
-
-		// go to beginning of that day
-		.set('hour', 0).set('minute', 0).set('second', 0)
-
-		// return Date object
-		.toDate();
-
-	headlineModel.find({ 'date': { $gt: firstDayOfThisWeek } }).exec()
+	headlineModel.find({ 'date': { $gt: lastSevenDays } }).exec()
 		.then(sortHeadlines)
 		.catch(reject);
 
 	function sortHeadlines(headlinesFromThisWeek){
 
-		var sortedHeadlines = headlinesFromThisWeek
-
-			.map(toPlainObject)
+		var sortedHeadlines = headlinesFromThisWeek.map(toPlainObject)
 
 			// sort by descending date
 			.sort(byDate)
@@ -83,19 +74,14 @@ function todayYesterdayAndThisWeek(accumulator, headline){
 
 	let queryDate = moment(headline.date).format(common.momentDayFormat);
 
-	// was it published this week?
-	if (moment(headline.date).isSame(thisVeryMoment, 'week')){
+	if (queryDate === today){
+		accumulator.today.push(headline);     // was it today?
 
-		if (queryDate === today){
-			accumulator.today.push(headline);     // was it today?
+	} else if (queryDate === yesterday){
+		accumulator.yesterday.push(headline); // was it yesterday?
 
-		} else if (queryDate === yesterday){
-			accumulator.yesterday.push(headline); // was it yesterday?
-
-		} else {
-			accumulator.thisWeek.push(headline); // either way - it's this week
-		}
-
+	} else {
+		accumulator.thisWeek.push(headline); // either way - it's this week
 	}
 
 	return accumulator;
