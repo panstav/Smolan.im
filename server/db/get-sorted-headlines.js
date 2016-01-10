@@ -15,7 +15,7 @@ function sortedHeadlinesPromise(resolve, reject){
 
 	var headlineModel = mongoose.model('headline');
 
-	let lastSevenDays = moment().subtract(7, 'days')
+	let lastSevenDays = moment().subtract(30, 'days')
 		.set('hour', 0).set('minute', 0).set('second', 0) // go to beginning of that day
 		.toDate();                                        // return Date object
 
@@ -39,7 +39,7 @@ function sortedHeadlinesPromise(resolve, reject){
 			})
 
 			// categorize by today, yesterday and this week
-			.reduce(todayYesterdayAndThisWeek, { today: [], yesterday: [], thisWeek: [] });
+			.reduce(sortedByTimeCategory, { today: [], yesterday: [], lastSevenDays: [], lastThirtyDays: [] });
 
 		// fix up date as a last step because it's format is so human-centric
 		for (let category in sortedHeadlines){
@@ -65,12 +65,13 @@ function byDate(a, b){
 	return -1;
 }
 
-function todayYesterdayAndThisWeek(accumulator, headline){
+function sortedByTimeCategory(accumulator, headline){
 
 	let thisVeryMoment = moment();
 
 	let today = thisVeryMoment.format(common.momentDayFormat);
 	let yesterday = thisVeryMoment.subtract(1, 'days').format(common.momentDayFormat);
+	let sevenDaysAgo = thisVeryMoment.subtract(7, 'days');
 
 	let queryDate = moment(headline.date).format(common.momentDayFormat);
 
@@ -80,8 +81,11 @@ function todayYesterdayAndThisWeek(accumulator, headline){
 	} else if (queryDate === yesterday){
 		accumulator.yesterday.push(headline); // was it yesterday?
 
+	} else if (sevenDaysAgo.isBefore(headline.date)){
+		accumulator.lastSevenDays.push(headline); // was during last seven days?
+
 	} else {
-		accumulator.thisWeek.push(headline); // either way - it's this week
+		accumulator.lastThirtyDays.push(headline); // either way - it's this week
 	}
 
 	return accumulator;

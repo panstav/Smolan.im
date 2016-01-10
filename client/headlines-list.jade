@@ -1,0 +1,41 @@
+ol.A4
+
+	if categorizedDB.today.length > 0
+
+		li.today
+
+			h2 היום
+
+			ul.headlines
+				each item in categorizedDB.today
+					include list-item
+
+	if categorizedDB.yesterday.length > 0
+
+		li.yesterday
+
+			h2 אתמול
+
+			ul.headlines
+				each item in categorizedDB.yesterday
+					include list-item
+
+	if categorizedDB.lastSevenDays.length > 0
+
+		li.this-week
+
+			h2 השבוע
+
+			ul.headlines
+				each item in categorizedDB.lastSevenDays
+					include list-item
+
+	if categorizedDB.lastThirtyDays.length > 0
+
+		li.last-thirty-days
+
+			h2 החודש
+
+			ul.headlines
+				each item in categorizedDB.lastThirtyDays
+					include list-item
