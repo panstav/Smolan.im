@@ -63,7 +63,7 @@ function close(){
 function incr(headlineUrl, ip){
 
 	// get this headlines document (but only if it doesn't already have the current ip)
-	let query = { 'url': headlineUrl, 'views.ips': { $nin: ip } };
+	let query = { 'url': headlineUrl, 'views.ips': { $nin: [ip] } };
 
 	// append ip and increase count
 	let operation = { $push: { 'views.ips': ip }, $inc: { 'views.count': 1 } };
