@@ -3,14 +3,16 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
+var common = require('../../../common');
+
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
 
 	let mainHeadlines = $('.page_wrap section.post_main:first-of-type').map(parseMain).get();
-	let restHeadlines = $('.page_wrap section.post_main .discover_4_li').map(parseRest).slice(0, 2).get();
+	let restHeadlines = $('.page_wrap section.post_main .discover_4_li').map(parseRest).get();
 
-	cb(null, [].concat(mainHeadlines, restHeadlines).slice(0, 3));
+	cb(null, [].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
 
 	function parseMain(i, container){
 

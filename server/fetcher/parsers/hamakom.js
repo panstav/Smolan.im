@@ -5,13 +5,15 @@ var cheerio = require('cheerio');
 var moment = require('moment');
 moment.locale('he');
 
+var common = require('../../../common');
+
 let domain = 'http://www.ha-makom.co.il';
 
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
 
-	let mainHeadlines = $('#hamakom-content .view-content .views-row').slice(0, 3).map(parseHeadlines).get();
+	let mainHeadlines = $('#hamakom-content .view-content .views-row').slice(0, common.itemsPerMagazine).map(parseHeadlines).get();
 
 	cb(null, mainHeadlines);
 

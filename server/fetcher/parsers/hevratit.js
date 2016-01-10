@@ -3,11 +3,13 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
+var common = require('../../../common');
+
 module.exports = (res, cb) => {
 
 	var $ = cheerio.load(res.body);
 
-	let mainHeadlines = $('#content article').slice(0, 3).map(parseHeadlines).get();
+	let mainHeadlines = $('#content article').slice(0, common.itemsPerMagazine).map(parseHeadlines).get();
 
 	cb(null, mainHeadlines);
 
