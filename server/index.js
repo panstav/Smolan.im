@@ -14,7 +14,7 @@ var db = require('./db');
 module.exports.init = () => {
 
 	// prep rate limiter
-	let rateLimiter = getRateLimiter(!!process.env.LOCAL);
+	let rateLimiter = getRateLimiter();
 
 	// Boing
 	let server = express();
@@ -90,12 +90,13 @@ function fourOfour(req, res){
 	res.status(404).end();
 }
 
-function getRateLimiter(isLocal){
+function getRateLimiter(){
+
+	// don't use a rate limiter if we're not in production
+	let dontLimit = process.env.NODE_ENV !== 'production';
 
 	// empty middleware for local instance
-	if (isLocal) return (req, res, next) =>
-		{ next()
-	; };
+	if (dontLimit) return (req, res, next) => { next(); };
 
 	// every 30 minutes, allow only a single request
 	// than only send status 429 "Too Many Requests"
