@@ -46,9 +46,25 @@ module.exports = () => new Promise((resolve, reject) => {
 		async.parallel(tasks, (err, arrays) => {
 			if (err) return reject(err);
 
-			// flatten array
+			//-=======================================================---
+			//------------------ Flatten Arrays
+			//-=======================================================---
+
 			let results = [];
-			arrays.forEach(arr => { arr.forEach(item => { results.push(item); }); });
+
+			// go through every magazine
+			arrays.forEach(arr => {
+
+				// go through every headline
+				arr.forEach(item => {
+
+					for (let key in item){
+						if (!item[key]) return console.error(`Bad property ${key}`, item);
+					}
+
+					results.push(item);
+				});
+			});
 
 			// output
 			resolve(results);
