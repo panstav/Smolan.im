@@ -7,6 +7,7 @@ var optional = require('optional');
 var moment = require('moment');
 
 var db = require('./server/db');
+var compile = require('./server/fetcher/compile-jade');
 
 gulp.task('prep-public-dir', () => {
 
@@ -35,24 +36,6 @@ gulp.task('jade-to-html', done => {
 		.then(db.close)
 		.then(done)
 		.catch(done);
-
-	function compile(sortedHeadlines){
-
-		return new Promise((resolve, reject) => {
-
-			let locals = {
-				categorizedDB: sortedHeadlines
-			};
-
-			gulp.src('client/index.jade')
-				.pipe(plugins.jade({ locals }))
-				.pipe(gulp.dest('public'))
-				.on('error', reject)
-				.on('end', resolve);
-
-		});
-
-	}
 
 });
 

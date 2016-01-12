@@ -7,6 +7,7 @@ var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 
 var fetch = require('./fetcher');
+var compile = require('./fetcher/compile-jade');
 
 var db = require('./db');
 
@@ -45,29 +46,15 @@ module.exports.init = () => {
 	// register fetcher job initiator
 	server.get('/run-fetcher', rateLimiter, (req, res) => {
 
+		console.time('Fetching headlines done');
+
 		fetch()
 			.then(db.getSortedHeadlines)
-			.then(respondAndCompile)
-			.catch(console.log);
-
-		function respondAndCompile(sortedHeadlines){
-
-			res.status(200).end();
-
-			return new Promise((resolve, reject) => {
-
-				let locals = {
-					categorizedDB: sortedHeadlines
-				};
-
-				gulp.src('client/index.jade')
-					.pipe(plugins.jade({ locals }))
-					.pipe(gulp.dest('public'))
-					.on('error', reject)
-					.on('end', () => resolve);
-
-			});
-		}
+			.then(compile)
+			.then(
+				() => { console.timeEnd('Fetching headlines done'); res.status(200).end(); },
+				err => { if (err) console.log(err); }
+			);
 
 	});
 
