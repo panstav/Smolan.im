@@ -19,7 +19,7 @@ module.exports.init = () => {
 
 	// register main route
 	server.get('/', getRateLimiter('index'), (req, res) => {
-		res.sendFile('index.html', { root: 'public', maxAge: 1000*60*30 });
+		res.sendFile('index.html', { root: 'public', maxAge: process.env.NODE_ENV === 'production' ? 1000*60*30 : 0 });
 	});
 
 	// register redirection route
@@ -56,7 +56,7 @@ module.exports.init = () => {
 	});
 
 	// Serve static files
-	server.use(express.static('public', { maxAge: 1000*60*60*24*7 }));
+	server.use(express.static('public', { maxAge: process.env.NODE_ENV === 'production' ? 1000*60*60*24*7 : 0 }));
 
 	// set 404 fallback
 	server.use(fourOfour);
