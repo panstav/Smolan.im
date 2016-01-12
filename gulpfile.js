@@ -1,13 +1,18 @@
 'use strict';
 
+var fs = require('fs');
+
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 
 var optional = require('optional');
 var moment = require('moment');
+var sitemap = require('sitemap');
 
 var db = require('./server/db');
 var compile = require('./server/fetcher/compile-jade');
+
+var common = require('./common');
 
 gulp.task('prep-public-dir', () => {
 
@@ -49,4 +54,19 @@ gulp.task('jade-to-html', done => {
 
 });
 
-gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'js-to-js', 'jade-to-html'));
+gulp.task('generate-sitemap', done => {
+
+	let urls = [{
+		url: '/',
+		changefreq: 'hourly',
+		priority: 1,
+		lastmod: moment().format('YYYY-MM-DD')
+	}];
+
+	let smolanimMap = sitemap.createSitemap({ urls, hostname: common.domain });
+
+	fs.writeFile('public/sitemap.xml', smolanimMap.toString(), done);
+
+});
+
+gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'js-to-js', 'jade-to-html', 'generate-sitemap'));
