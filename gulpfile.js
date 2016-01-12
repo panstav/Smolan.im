@@ -19,7 +19,7 @@ gulp.task('prep-public-dir', () => {
 gulp.task('sass-to-css', () => {
 
 	return gulp.src('client/index.sass')
-		.pipe(plugins.sass({ outputStyle: 'expanded' }))
+		.pipe(plugins.sass({ outputStyle: process.env.NODE_ENV !== 'production' ? 'nested' : 'compressed' }))
 		.pipe(plugins.rename({ basename: 'styles' }))
 		.pipe(gulp.dest('public'));
 
@@ -28,6 +28,8 @@ gulp.task('sass-to-css', () => {
 gulp.task('js-to-js', () => {
 
 	return gulp.src('client/index.js')
+		.pipe(plugins.babel({ presets: ['es2015'] }))
+		.pipe(plugins.uglify({ output: { beautify: process.env.NODE_ENV !== 'production' } }))
 		.pipe(plugins.rename({ basename: 'script' }))
 		.pipe(gulp.dest('public'));
 

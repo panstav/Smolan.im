@@ -12,7 +12,7 @@ module.exports = function(sortedHeadlines){
 		};
 
 		gulp.src('client/index.jade')
-			.pipe(plugins.jade({ locals }))
+			.pipe(plugins.jade({ locals, pretty : process.env.NODE_ENV !== 'production' }))
 			.pipe(gulp.dest('public'))
 			.on('error', reject)
 			.on('end', resolve);
