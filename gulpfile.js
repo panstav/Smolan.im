@@ -21,7 +21,8 @@ gulp.task('prep-public-dir', () => {
 		'client/logo.png',
 		'client/font-carmela/*',
 		'client/favicons/*',
-		'client/google-analytics.js'
+		'client/google-analytics.js',
+		'client/robots.txt'
 	];
 
 	return gulp.src(copyPaste, { base: './client' })

@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+Disallow: /redirect
+Disallow: /run-fetcher
