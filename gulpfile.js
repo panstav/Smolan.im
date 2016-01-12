@@ -16,7 +16,14 @@ var common = require('./common');
 
 gulp.task('prep-public-dir', () => {
 
-	return gulp.src(['client/font-carmela/*', 'client/google-analytics.js'], { base: './client' })
+	let copyPaste = [
+		'client/manifest.json',
+		'client/font-carmela/*',
+		'client/favicons/*',
+		'client/google-analytics.js'
+	];
+
+	return gulp.src(copyPaste, { base: './client' })
 		.pipe(gulp.dest('public'));
 
 });
