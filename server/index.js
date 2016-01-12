@@ -14,14 +14,11 @@ var db = require('./db');
 // Start a new server, set it up and return it.
 module.exports.init = () => {
 
-	// prep rate limiter
-	let rateLimiter = getRateLimiter();
-
 	// Boing
 	let server = express();
 
 	// register main route
-	server.get('/', (req, res) => {
+	server.get('/', getRateLimiter('index'), (req, res) => {
 		res.sendFile('index.html', { root: 'public', maxAge: 1000*60*30 });
 	});
 
@@ -44,7 +41,7 @@ module.exports.init = () => {
 	});
 
 	// register fetcher job initiator
-	server.get('/run-fetcher', rateLimiter, (req, res) => {
+	server.get('/run-fetcher', getRateLimiter('fetcher'), (req, res) => {
 
 		console.time('Fetching headlines done');
 
@@ -77,7 +74,25 @@ function fourOfour(req, res){
 	res.status(404).end();
 }
 
-function getRateLimiter(){
+function getRateLimiter(route){
+
+	var limiters = {
+
+		index: {
+			windowMs: 1000 * 60,      // cache request ips for a minute
+			max: 6,                   // block the seventh request
+			delayAfter: 3,            // delay the fourth request
+			delayMs: 5000
+		},
+
+		fetcher: {
+			windowMs: 1000 * 60 * 30, // cache request ips for half an hour
+			max: 1,                   // block the second request
+			delayAfter: 0,
+			delayMs: 0
+		}
+
+	};
 
 	// don't use a rate limiter if we're not in production
 	let dontLimit = process.env.NODE_ENV !== 'production';
@@ -87,13 +102,6 @@ function getRateLimiter(){
 
 	// every 30 minutes, allow only a single request
 	// than only send status 429 "Too Many Requests"
-	return limiter(
-		{
-			windowMs: 1000 * 60 * 30,
-			max: 1,
-			delayAfter: 0,
-			delayMs: 0
-		}
-	);
+	return limiter(limiters[route]);
 
 }
