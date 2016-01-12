@@ -1,5 +1,5 @@
 module.exports = {
-	domain: process.env.LOCAL ? 'http://localhost:3000' : 'http://smolanim.herokuapp.com',
+	domain: process.env.LOCAL ? 'http://localhost:3000' : 'http://www.smolan.im',
 
 	itemsPerMagazine: 5,
 
