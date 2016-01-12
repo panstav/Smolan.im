@@ -15,17 +15,15 @@ function sortedHeadlinesPromise(resolve, reject){
 
 	var headlineModel = mongoose.model('headline');
 
-	let lastSevenDays = moment().subtract(30, 'days')
+	let lastThirtyDays = moment().subtract(30, 'days')
 		.set('hour', 0).set('minute', 0).set('second', 0) // go to beginning of that day
 		.toDate();                                        // return Date object
 
-	headlineModel.find({ 'date': { $gt: lastSevenDays } }).exec()
-		.then(sortHeadlines)
-		.catch(reject);
+	headlineModel.find({ 'date': { $gt: lastThirtyDays } }).exec().then(sortHeadlines, reject);
 
-	function sortHeadlines(headlinesFromThisWeek){
+	function sortHeadlines(headlinesFromThisMonth){
 
-		var sortedHeadlines = headlinesFromThisWeek.map(toPlainObject)
+		var sortedHeadlines = headlinesFromThisMonth.map(toPlainObject)
 
 			// sort by descending date
 			.sort(byDate)
