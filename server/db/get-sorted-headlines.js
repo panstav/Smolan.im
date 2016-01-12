@@ -5,6 +5,8 @@ var common = require('../../common');
 var mongoose = require('mongoose');
 var moment = require('moment');
 
+var getDomain = require('top-domain');
+
 module.exports = () => {
 
 	return new Promise(sortedHeadlinesPromise);
@@ -27,6 +29,9 @@ function sortedHeadlinesPromise(resolve, reject){
 
 			// sort by descending date
 			.sort(byDate)
+
+			// limit per-magazine
+			.reduce(maxHeadlinesPerMagazine(), [])
 
 			// turn url into a redirection route, with url as query
 			// this is for tracking outbound links
@@ -61,6 +66,34 @@ function byDate(a, b){
 	}
 
 	return -1;
+}
+
+function maxHeadlinesPerMagazine(){
+
+	var counter = {};
+
+	return (arr, headline) => {
+
+		var domainName = getDomain(headline.url);
+
+		// if counter wasn't initiated for this domain, include it, increment and continue
+		if (!counter[domainName]){
+			counter[domainName] = 1;
+
+			arr.push(headline);
+			return arr;
+		}
+
+		// if it already reached max headlines, don't include it
+		if (counter[domainName] === common.itemsPerMagazine) return arr;
+
+		// otherwise we're just counting, include it and continue
+		counter[domainName]++;
+		arr.push(headline);
+		return arr;
+	};
+
+
 }
 
 function sortedByTimeCategory(accumulator, headline){
