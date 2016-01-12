@@ -33,7 +33,9 @@ module.exports = () => new Promise((resolve, reject) => {
 		function parserToTask(parser){
 
 			return done => {
-				got(parser.url, gotOptions).then(res => { parser(res, done); }).catch(err => reject(err));
+				got(parser.url, gotOptions)
+					.then(res => { parser(res, done); })
+					.catch(err => reject(err));
 			}
 
 		}
@@ -67,8 +69,20 @@ module.exports = () => new Promise((resolve, reject) => {
 			});
 
 			// output
-			resolve(results);
+			resolve(unique(results));
 		});
+
+		function unique(arr){
+
+			var urls = [];
+			return arr.filter(headline => {
+				if (urls.indexOf(headline.url) > -1) return false;
+
+				urls.push(headline.url);
+				return true;
+			});
+		}
+
 	}
 
 });
