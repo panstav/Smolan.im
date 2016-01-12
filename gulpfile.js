@@ -11,7 +11,7 @@ var compile = require('./server/fetcher/compile-jade');
 
 gulp.task('prep-public-dir', () => {
 
-	return gulp.src('client/font-carmela/*', { base: './client' })
+	return gulp.src(['client/font-carmela/*', 'client/google-analytics.js'], { base: './client' })
 		.pipe(gulp.dest('public'));
 
 });

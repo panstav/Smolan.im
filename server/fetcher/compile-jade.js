@@ -11,6 +11,8 @@ module.exports = function(sortedHeadlines){
 			categorizedDB: sortedHeadlines
 		};
 
+		if (process.env.NODE_ENV === 'production') locals.production = true;
+
 		gulp.src('client/index.jade')
 			.pipe(plugins.jade({ locals, pretty : process.env.NODE_ENV !== 'production' }))
 			.pipe(gulp.dest('public'))
