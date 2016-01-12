@@ -7,6 +7,9 @@ html(lang="he")
 		style
 			include ../public/styles.css
 
+		script
+			include ../public/script.js
+
 		meta(
 		charset="utf-8"
 		)
@@ -20,9 +23,27 @@ html(lang="he")
 
 		header
 			.A4
-
 				h1.logo שמאלנים
 				span &nbsp;-&nbsp;
 				.tagline ויש נקודה.
+				.help-switch ?
+
+			.A4.help
+				p
+					|המנגנון מאחורי "שמאלנים" אוסף מאמרים מהאתרים&nbsp;
+					a(href="http://www.haaretz.co.il" target="_blank") הארץ
+					|,&nbsp;
+					a(href="http://www.ha-makom.co.il" target="_blank") המקום הכי חם בגהינום
+					|,&nbsp;
+					a(href="http://www.haokets.org" target="_blank") העוקץ
+					|,&nbsp;
+					a(href="http://tv.social.org.il" target="_blank") הטלויזיה החברתית
+					|&nbsp;ו-&nbsp;
+					a(href="http://mekomit.co.il" target="_blank") שיחה מקומית
+					|&nbsp; ומציג אותם כאן.
+
+				p כל זכויות היוצרים שייכות לכתבים והצלמים של האתרים האלו. אתר "שמאלנים" אינו מצדד בהכרח בדעות הנקובות בכתבות אלו וכמובן שאינו לוקח אחריות על הכתוב בהן.
+
+				p כמו עם כל גוף ידע - השתמשו בביקורתיות ובתבונה כאשר אתם קוראים "אקטואליה".
 
 		include headlines-list

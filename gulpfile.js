@@ -25,6 +25,14 @@ gulp.task('sass-to-css', () => {
 
 });
 
+gulp.task('js-to-js', () => {
+
+	return gulp.src('client/index.js')
+		.pipe(plugins.rename({ basename: 'script' }))
+		.pipe(gulp.dest('public'));
+
+});
+
 gulp.task('jade-to-html', done => {
 
 	let env = optional('./env');
@@ -39,4 +47,4 @@ gulp.task('jade-to-html', done => {
 
 });
 
-gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'jade-to-html'));
+gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'js-to-js', 'jade-to-html'));
