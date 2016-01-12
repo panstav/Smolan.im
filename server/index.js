@@ -2,6 +2,7 @@
 
 var express = require('express');
 var limiter = require('express-rate-limit');
+var compression = require('compression');
 
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
@@ -16,6 +17,12 @@ module.exports.init = () => {
 
 	// Boing
 	let server = express();
+
+	// A fix for dealing with DNS for heroku apps
+	if (process.env.HEROKU) server.enable('trust proxy');
+
+	// compress everything
+	server.use(compression());
 
 	// register main route
 	server.get('/', getRateLimiter('index'), (req, res) => {
