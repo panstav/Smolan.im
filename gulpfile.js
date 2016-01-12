@@ -18,6 +18,7 @@ gulp.task('prep-public-dir', () => {
 
 	let copyPaste = [
 		'client/manifest.json',
+		'client/logo.png',
 		'client/font-carmela/*',
 		'client/favicons/*',
 		'client/google-analytics.js'

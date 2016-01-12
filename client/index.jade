@@ -4,17 +4,11 @@ html(lang="he")
 	head
 		link(rel="manifest", href="/manifest.json")
 
-		title שמאלנים - ויש נקודה.
-
-		style
-			include ../public/styles.css
-
 		script
 			include ../public/script.js
 
-		if production
-			script
-				include ../public/google-analytics.js
+		style
+			include ../public/styles.css
 
 		meta(
 		charset="utf-8"
@@ -25,7 +19,13 @@ html(lang="he")
 		content="width=device-width"
 		)
 
+		include seo
+
 		include favicons
+
+		if production
+			script
+				include ../public/google-analytics.js
 
 	body
 
