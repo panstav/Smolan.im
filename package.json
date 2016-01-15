@@ -1,6 +1,6 @@
 {
   "name": "smolanim",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Israeli Leftist Articles Aggregator",
   "main": "index.js",
   "dependencies": {
