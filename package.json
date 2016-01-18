@@ -31,7 +31,7 @@
   "devDependencies": {},
   "scripts": {
     "postinstall": "./node_modules/.bin/gulp build",
-    "local": "LOCAL=true node index.js"
+    "local": "DEBUG=true LOCAL=true node index.js"
   },
   "author": "Stav Geffen <stavgeffen@gmail.com>",
   "license": "ISC"

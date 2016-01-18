@@ -35,7 +35,7 @@ module.exports = () => new Promise((resolve, reject) => {
 			return done => {
 				got(parser.url, gotOptions)
 					.then(res => { parser(res, done); })
-					.catch(err => reject(err));
+					.catch(err => done(err));
 			}
 
 		}

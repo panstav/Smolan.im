@@ -5,7 +5,7 @@ var moment = require('moment');
 
 var common = require('../../../common');
 
-let domain = 'http://socialism.org.il';
+var domain = 'http://socialism.org.il';
 
 module.exports = (res, cb) => {
 

@@ -50,13 +50,11 @@ module.exports.init = () => {
 	// register fetcher job initiator
 	server.get('/run-fetcher', getRateLimiter('fetcher'), (req, res) => {
 
-		console.time('Fetching headlines done');
-
 		fetch()
 			.then(db.getSortedHeadlines)
 			.then(compile)
 			.then(
-				() => { console.timeEnd('Fetching headlines done'); res.status(200).end(); },
+				() => { res.status(200).end(); },
 				err => { if (err) console.log(err); }
 			);
 
@@ -101,11 +99,8 @@ function getRateLimiter(route){
 
 	};
 
-	// don't use a rate limiter if we're not in production
-	let dontLimit = process.env.NODE_ENV !== 'production';
-
-	// empty middleware for local instance
-	if (dontLimit) return (req, res, next) => { next(); };
+	// empty middleware for production non-debug instances
+	if (process.env.DEBUG || process.env.NODE_ENV !== 'production') return (req, res, next) => { next(); };
 
 	// every 30 minutes, allow only a single request
 	// than only send status 429 "Too Many Requests"
