@@ -21,8 +21,7 @@ module.exports = headlines => {
 		db.models.headlines.findOne({ 'url': headline.url })
 			.exec()
 			.then(saveIfNone)
-			.then(done)
-			.catch(done);
+			.then(done, err => done(err));
 
 		function saveIfNone(existingHeadline){
 

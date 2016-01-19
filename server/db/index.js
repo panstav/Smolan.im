@@ -7,10 +7,11 @@ var getSortedHeadlines = require('./get-sorted-headlines');
 
 var headlineModel;
 var headlineSchema = {
-	title:  String,
-	url:    String,
-	date:   Date,
-	image:  String,
+	title:        String,
+	description:  String,
+	url:          String,
+	date:         Date,
+	image:        String,
 
 	views: {
 		count: { type: Number, default: 0 },

@@ -5,43 +5,47 @@ var moment = require('moment');
 
 var common = require('../../../common');
 
-module.exports = (res, cb) => {
+module.exports = res => {
 
 	var $ = cheerio.load(res.body);
 
-	let mainHeadlines = $('.page_wrap section.post_main:first-of-type').map(parseMain).get();
-	let restHeadlines = $('.page_wrap section.post_main .discover_4_li').map(parseRest).get();
+	return new Promise((resolve, reject) => {
 
-	cb(null, [].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
+		let mainHeadlines = $('.page_wrap section.post_main:first-of-type').map(parseMain).get();
+		let restHeadlines = $('.page_wrap section.post_main .discover_4_li').map(parseRest).get();
 
-	function parseMain(i, container){
+		resolve([].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
 
-		let mainHeadline = {
-			title: $('h2', container).text(),
-			image: $('a img', container).attr('src'),
-			url: $('h2', container).parent().attr('href'),
-			date: $('.post_details time', container).text()
-		};
+		function parseMain(i, container){
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').toDate();
+			let mainHeadline = {
+				title: $('h2', container).text(),
+				image: $('a img', container).attr('src'),
+				url: $('h2', container).parent().attr('href'),
+				date: $('.post_details time', container).text()
+			};
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').toDate();
 
-	function parseRest(i, container){
+			return mainHeadline;
+		}
 
-		let mainHeadline = {
-			title: $('h3', container).text(),
-			image: $('a img', container).attr('src'),
-			url: $('h3', container).parent().attr('href'),
-			date: $('.post_details time', container).text()
-		};
+		function parseRest(i, container){
 
-		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').toDate();
+			let mainHeadline = {
+				title: $('h3', container).text(),
+				image: $('a img', container).attr('src'),
+				url: $('h3', container).parent().attr('href'),
+				date: $('.post_details time', container).text()
+			};
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YY').toDate();
 
+			return mainHeadline;
+		}
+
+	});
 };
 
-module.exports.url = 'http://www.haokets.org/';
+module.exports.headlinesSourceUrl = 'http://www.haokets.org/';
+module.exports.description = { selector: 'article .expert' };

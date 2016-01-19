@@ -6,50 +6,56 @@ var moment = require('moment');
 var common = require('../../../common');
 
 var domain = 'http://socialism.org.il';
+var mainPath = 'http://socialism.org.il/maavak';
 
-module.exports = (res, cb) => {
+module.exports = res => {
 
 	var $ = cheerio.load(res.body);
 
-	let mainHeadlines = $('#tdOverallLeft > div:nth-of-type(2) > div > div:first-of-type > div > div').map(parseMain).get();
-	let restHeadlines = $('#tdOverallLeft > div:nth-of-type(2) > div > div:nth-of-type(n+2):not(:last-of-type)').map(parseRest).get();
+	return new Promise((resolve, reject) => {
 
-	cb(null, [].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
+		let mainHeadlines = $('#tdOverallLeft > div:nth-of-type(2) > div > div:first-of-type > div > div').map(parseMain).get();
+		let restHeadlines = $('#tdOverallLeft > div:nth-of-type(2) > div > div:nth-of-type(n+2):not(:last-of-type)').map(parseRest).get();
 
-	function parseMain(i, container){
+		resolve([].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
 
-		let mainHeadline = {
-			title: $('a div div:first-of-type', container).text(),
-			url: $('a', container).attr('href'),
-			image: $('a img', container).attr('src'),
-			date: $('a > div > div:last-of-type', container).text()
-		};
+		function parseMain(i, container){
 
-		mainHeadline.url = domain + '/' + mainHeadline.url;
-		mainHeadline.image = domain + mainHeadline.image;
+			let mainHeadline = {
+				title: $('a div div:first-of-type', container).text(),
+				url: $('a', container).attr('href'),
+				image: $('a img', container).attr('src'),
+				date: $('a > div > div:last-of-type', container).text()
+			};
 
-		mainHeadline.date = moment(mainHeadline.date.substr(mainHeadline.date.indexOf('|') + 2), 'DD.MM.YYYY').toDate();
+			mainHeadline.url = mainPath + '/' + mainHeadline.url;
+			mainHeadline.image = domain + mainHeadline.image;
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date.substr(mainHeadline.date.indexOf('|') + 2), 'DD.MM.YYYY').toDate();
 
-	function parseRest(i, container){
+			return mainHeadline;
+		}
 
-		let mainHeadline = {
-			title: $('a span:nth-of-type(2)', container).text(),
-			url: $('a img', container).attr('href'),
-			image: $('a img', container).attr('src'),
-			date: $('a > div > div:last-of-type', container).text()
-		};
+		function parseRest(i, container){
 
-		mainHeadline.url = domain + '/' + mainHeadline.url;
-		mainHeadline.image = domain + mainHeadline.image;
+			let mainHeadline = {
+				title: $('a span:nth-of-type(2)', container).text(),
+				url: $('a', container).attr('href'),
+				image: $('a img', container).attr('src'),
+				date: $('a > div > div:last-of-type', container).text()
+			};
 
-		mainHeadline.date = moment(mainHeadline.date.substr(mainHeadline.date.indexOf('|') + 2), 'DD.MM.YYYY').toDate();
+			mainHeadline.url = mainPath + '/' + mainHeadline.url;
+			mainHeadline.image = domain + mainHeadline.image;
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date.substr(mainHeadline.date.indexOf('|') + 2), 'DD.MM.YYYY').toDate();
+
+			return mainHeadline;
+		}
+
+	});
 
 };
 
-module.exports.url = domain + '/maavak';
+module.exports.headlinesSourceUrl = mainPath;
+module.exports.description = { selector: '#tdArticleColumn .article_header' };

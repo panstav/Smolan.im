@@ -42,7 +42,7 @@ module.exports.init = () => {
 
 		// increment view count as this ip address
 		db.views.incr(redirectRequest, req.ip).catch(err => {
-			if (err) console.error(err);
+			if (err) console.error('DB: Increment error', err);
 		});
 
 	});
@@ -55,7 +55,7 @@ module.exports.init = () => {
 			.then(compile)
 			.then(
 				() => { res.status(200).end(); },
-				err => { if (err) console.log(err); }
+				err => { if (err) console.log('Fetching error', err); }
 			);
 
 	});

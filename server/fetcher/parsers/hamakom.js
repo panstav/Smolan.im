@@ -9,31 +9,36 @@ var common = require('../../../common');
 
 let domain = 'http://www.ha-makom.co.il';
 
-module.exports = (res, cb) => {
+module.exports = res => {
 
 	var $ = cheerio.load(res.body);
 
-	let mainHeadlines = $('#hamakom-content .view-content .views-row').slice(0, common.itemsPerMagazine).map(parseHeadlines).get();
+	return new Promise((resolve, reject) => {
 
-	cb(null, mainHeadlines);
+		let mainHeadlines = $('#hamakom-content .view-content .views-row').slice(0, common.itemsPerMagazine).map(parseHeadlines).get();
 
-	function parseHeadlines(i, container){
+		resolve(mainHeadlines);
 
-		let mainHeadline = {
-			title: $('h2.post-title', container).text(),
-			url: $('h2.post-title a', container).attr('href'),
-			image: $('a img', container).attr('src'),
-			date: $('span.post-date', container).text()
-		};
+		function parseHeadlines(i, container){
 
-		mainHeadline.url = domain + mainHeadline.url;
-		mainHeadline.authorUrl = domain + mainHeadline.url;
+			let mainHeadline = {
+				title: $('h2.post-title', container).text(),
+				url: $('h2.post-title a', container).attr('href'),
+				image: $('a img', container).attr('src'),
+				date: $('span.post-date', container).text()
+			};
 
-		mainHeadline.date = moment(mainHeadline.date.replace('\'', '׳'), 'DD MMM, YYYY').toDate();
+			mainHeadline.url = domain + mainHeadline.url;
+			mainHeadline.authorUrl = domain + mainHeadline.url;
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date.replace('\'', '׳'), 'DD MMM, YYYY').toDate();
+
+			return mainHeadline;
+		}
+
+	});
 
 };
 
-module.exports.url = domain + '/articles';
+module.exports.headlinesSourceUrl = domain + '/articles';
+module.exports.description = { selector: 'article .field-name-field-sub-title .field-item' };

@@ -5,43 +5,51 @@ var moment = require('moment');
 
 var common = require('../../../common');
 
-module.exports = (res, cb) => {
+module.exports = res => {
 
 	var $ = cheerio.load(res.body);
 
-	let mainHeadlines = $('.main_promotions li.mainprom').map(parseMain).get();
-	let restHeadlines = $('.last_posts li.last_posts_li').map(parseRest).get();
+	return new Promise((resolve, reject) => {
 
-	cb(null, [].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
+		let mainHeadlines = $('.main_promotions li.mainprom').map(parseMain).get();
+		let restHeadlines = $('.last_posts li.last_posts_li').map(parseRest).get();
 
-	function parseMain(i, container){
+		resolve([].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
 
-		let mainHeadline = {
-			title: $('h2', container).text(),
-			url: $('h2', container).parent().attr('href'),
-			image: $('a img', container).attr('src'),
-			date: $('.post_details time', container).text()
-		};
+		function parseMain(i, container){
 
-		mainHeadline.date = moment(mainHeadline.date, 'D.M.YYYY').toDate();
+			let mainHeadline = {
+				title: $('h2', container).text(),
+				url: $('h2', container).parent().attr('href'),
+				image: $('a img', container).attr('src'),
+				date: $('.post_details time', container).text()
+			};
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date, 'D.M.YYYY').toDate();
 
-	function parseRest(i, container){
+			return mainHeadline;
+		}
 
-		let mainHeadline = {
-			title: $('h3', container).text(),
-			url: $('h3', container).parent().attr('href'),
-			image: $('a img', container).attr('src'),
-			date: $('.post_details time', container).text()
-		};
+		function parseRest(i, container){
 
-		mainHeadline.date = moment(mainHeadline.date, 'D.M.YYYY').toDate();
+			let mainHeadline = {
+				title: $('h3', container).text(),
+				url: $('h3', container).parent().attr('href'),
+				image: $('a img', container).attr('src'),
+				date: $('.post_details time', container).text()
+			};
 
-		return mainHeadline;
-	}
+			mainHeadline.date = moment(mainHeadline.date, 'D.M.YYYY').toDate();
+
+			return mainHeadline;
+		}
+
+	});
 
 };
 
-module.exports.url = 'http://mekomit.co.il/';
+module.exports.headlinesSourceUrl = 'http://mekomit.co.il/';
+module.exports.description = {
+	selector: 'article h2, article .post > p:first-of-type',
+	transform: elem => elem.get()[0].children[0].data
+};

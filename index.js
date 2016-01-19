@@ -12,7 +12,7 @@ if (env) for (let i in env) process.env[i] = env[i];
 require('./server/db')
 	.init(process.env.MONGO_URI)
 	.then(connection => { console.log(`DB is connected to ${ connection.host }:${ connection.port }`); })
-	.catch(console.error);
+	.catch(err => console.error('DB didn\'t connect', err));
 
 //-=======================================================---
 //------------------ Express Server
