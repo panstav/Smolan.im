@@ -17,7 +17,11 @@ module.exports = res => {
 
 		let mainHeadlines = $('#hamakom-content .view-content .views-row').slice(0, common.itemsPerMagazine).map(parseHeadlines).get();
 
-		resolve(mainHeadlines);
+		resolve(mainHeadlines.map(headline => {
+			headline.source = 'המקום הכי חם בגיהנום';
+
+			return headline;
+		}));
 
 		function parseHeadlines(i, container){
 

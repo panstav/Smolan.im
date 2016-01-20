@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var cheerio = require('cheerio');
 var moment = require('moment');
 
@@ -16,7 +17,15 @@ module.exports = res => {
 		let mainHeadlines = $('article.hero').not(premiumArticle).map(parseMain).get();
 		let restHeadlines = $('article:not(.hero)').not(premiumArticle).not(specialArticles).map(parseRest).get();
 
-		resolve([].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
+		let allHeadlines = [].concat(mainHeadlines, restHeadlines)
+			.slice(0, common.itemsPerMagazine)
+			.map(headline => {
+				headline.source = 'הארץ';
+
+				return headline;
+			});
+
+		resolve(allHeadlines);
 
 		function parseMain(i, container){
 
@@ -75,7 +84,7 @@ module.exports.description = {
 
 		let found;
 		for (var i = 0, len = elements.length; i < len; i++){
-			let data = elements[i].children[0].data;
+			let data = _.get(elements[i], 'children[0].data');
 
 			if (data){
 				found = data;

@@ -5,7 +5,10 @@ li
 			.image(style="background-image: url(#{ item.image })")
 
 	.details
-		span.date= item.date
+		.stats
+			span.source= item.source
+			span &middot;
+			span.date= item.date
 		a(href=item.url, title=item.title)
 			h3= item.title
 		p=item.description

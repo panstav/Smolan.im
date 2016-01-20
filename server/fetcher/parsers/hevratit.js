@@ -14,7 +14,11 @@ module.exports = res => {
 
 		let mainHeadlines = $('#content article').slice(0, common.itemsPerMagazine).map(parseHeadlines).get();
 
-		resolve(mainHeadlines);
+		resolve(mainHeadlines.map(headline => {
+			headline.source = 'הטלויזיה החברתית';
+
+			return headline;
+		}));
 
 		function parseHeadlines(i, container){
 

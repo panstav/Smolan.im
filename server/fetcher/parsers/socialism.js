@@ -17,7 +17,15 @@ module.exports = res => {
 		let mainHeadlines = $('#tdOverallLeft > div:nth-of-type(2) > div > div:first-of-type > div > div').map(parseMain).get();
 		let restHeadlines = $('#tdOverallLeft > div:nth-of-type(2) > div > div:nth-of-type(n+2):not(:last-of-type)').map(parseRest).get();
 
-		resolve([].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
+		let allHeadlines = [].concat(mainHeadlines, restHeadlines)
+			.slice(0, common.itemsPerMagazine)
+			.map(headline => {
+				headline.source = 'מאבק סוציאליסטי';
+
+				return headline;
+			});
+
+		resolve(allHeadlines);
 
 		function parseMain(i, container){
 

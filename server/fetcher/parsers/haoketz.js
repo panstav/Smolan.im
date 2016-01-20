@@ -14,7 +14,15 @@ module.exports = res => {
 		let mainHeadlines = $('.page_wrap section.post_main:first-of-type').map(parseMain).get();
 		let restHeadlines = $('.page_wrap section.post_main .discover_4_li').map(parseRest).get();
 
-		resolve([].concat(mainHeadlines, restHeadlines).slice(0, common.itemsPerMagazine));
+		let allHeadlines = [].concat(mainHeadlines, restHeadlines)
+			.slice(0, common.itemsPerMagazine)
+			.map(headline => {
+				headline.source = 'העוקץ';
+
+				return headline;
+			});
+
+		resolve(allHeadlines);
 
 		function parseMain(i, container){
 
