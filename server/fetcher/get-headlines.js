@@ -65,10 +65,15 @@ module.exports = () => {
 							desc = $(parser.description.selector).text();
 						}
 
-						desc = desc.trim();
+						if (desc){
+							desc = desc.trim();
 
-						// ensure a dot at the end of descrpition paragraph
-						if (desc.charAt(desc.length-1) !== '.') desc += '.';
+							// ensure a dot at the end of descrpition paragraph
+							if (desc.charAt(desc.length-1) !== '.') desc += '.';
+
+						} else {
+							desc = '';
+						}
 
 						// attach to headline object
 						headline.description = desc;
