@@ -1,15 +1,15 @@
 li
 
-	if item.image
-		a(href=item.url, title=item.title)
+	a(href=item.url, title=item.title)
+
+		if item.image
 			.image(style="background-image: url(#{ item.image })")
 
-	.details
-		.stats
-			span.source= item.source
-			span &middot;
-			span.date= item.date
-		a(href=item.url, title=item.title)
+		.details
+			.stats
+				span.source= item.source
+				span &middot;
+				span.date= item.date
 			h3= item.title
-		p=item.description
+			p=item.description
 
