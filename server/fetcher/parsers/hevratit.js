@@ -44,12 +44,20 @@ module.exports.description = {
 	transform: elem => {
 
 		let children = _.get(elem.get(), '[0].children');
+
+		// get text nodes
 		let textChildren = children.filter(node => node.type === 'text');
 
-		let desc = _.get(textChildren, '[1].data');
+		// try each
+		let desc = textChildren.filter(child => {
+			let text = child.data;
+			return (text && !!text.trim());
+		}).map(text => text.data);
 
-		if (desc.trim()) return desc.trim();
+		// pick the first, or move to the next strategy
+		if (desc.length) return desc[0].trim();
 
+		// get text of first paragraph
 		let paragraphs = children.filter(node => node.name === 'p');
 		return _.get(paragraphs, '[0].children[0].data').trim();
 	}
