@@ -48,7 +48,8 @@ Totals per magazine:
 	Ha-Oketz: ${all.filter(isAt('haokets.org')).length}
 	Hevratit TV: ${all.filter(isAt('social.org.il')).length}
 	Mekomit: ${all.filter(isAt('mekomit.co.il')).length}
-	Social Struggle: ${all.filter(isAt('socialism.org.il')).length}`);
+	Social Struggle: ${all.filter(isAt('socialism.org.il')).length}
+	Presspectiva: ${all.filter(isAt('presspectiva.org.il')).length}`);
 
 	}
 

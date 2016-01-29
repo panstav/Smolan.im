@@ -53,6 +53,8 @@ module.exports = () => {
 			function populateDescription(headline){
 				return new Promise((resolve, reject) => {
 
+					if (headline.description) return resolve(headline);
+
 					got(headline.url, gotOptions, (err, resBody) => {
 						if (err) return reject(err);
 
