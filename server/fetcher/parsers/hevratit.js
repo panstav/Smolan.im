@@ -59,6 +59,16 @@ module.exports.description = {
 
 		// get text of first paragraph
 		let paragraphs = children.filter(node => node.name === 'p');
-		return _.get(paragraphs, '[0].children[0].data').trim();
+		desc = _.get(paragraphs, '[0].children[0].data');
+
+		if (desc) return desc.trim();
+
+		// deep exception
+		var $ = cheerio.load(children);
+		desc = $('.hasCaption [dir="rtl"]').text();
+
+		if (desc) return desc.trim();
+
+		return '';
 	}
 };
