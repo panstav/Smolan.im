@@ -55,7 +55,10 @@ module.exports.init = () => {
 			.then(compile)
 			.then(
 				() => { res.status(200).end(); },
-				err => { if (err) console.log('Fetching error', err); }
+				err => {
+					if (err) console.log('Fetching error', err);
+					res.status(500).end();
+				}
 			);
 
 	});
