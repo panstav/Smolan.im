@@ -1,23 +1,17 @@
 'use strict';
 
-var common = require('../../common');
+const common = require('../../common');
 
-var mongoose = require('mongoose');
-var moment = require('moment');
+const mongoose = require('mongoose');
+const moment = require('moment');
 
-var getDomain = require('top-domain');
+const getDomain = require('top-domain');
 
-module.exports = () => {
+module.exports = () => new Promise((resolve, reject) => {
 
-	return new Promise(sortedHeadlinesPromise);
+	const headlineModel = mongoose.model('headline');
 
-};
-
-function sortedHeadlinesPromise(resolve, reject){
-
-	var headlineModel = mongoose.model('headline');
-
-	let lastThirtyDays = moment().subtract(30, 'days')
+	const lastThirtyDays = moment().subtract(30, 'days')
 		.set('hour', 0).set('minute', 0).set('second', 0) // go to beginning of that day
 		.toDate();                                        // return Date object
 
@@ -52,7 +46,7 @@ function sortedHeadlinesPromise(resolve, reject){
 		resolve(sortedHeadlines);
 	}
 
-}
+});
 
 function toPlainObject(doc){
 	return doc.toObject();

@@ -1,9 +1,13 @@
 'use strict';
 
-var optional = require('optional');
+const optional = require('optional');
 
-var env = optional('./env');
+const log = require('./server/log');
+
+const env = optional('./env');
 if (env) for (let i in env) process.env[i] = env[i];
+log.info(`ENV has set`);
+log.debug({ env });
 
 //-=======================================================---
 //------------------ Database
@@ -11,8 +15,8 @@ if (env) for (let i in env) process.env[i] = env[i];
 
 require('./server/db')
 	.init(process.env.MONGO_URI)
-	.then(connection => { console.log(`DB is connected to ${ connection.host }:${ connection.port }`); })
-	.catch(err => console.error('DB didn\'t connect', err));
+	.then(connection => { log.info(`DB is connected to ${ connection.host }:${ connection.port }`); })
+	.catch(err => log.error('DB didn\'t connect', err));
 
 //-=======================================================---
 //------------------ Express Server
@@ -22,4 +26,4 @@ let port = process.env.PORT || 3000;
 
 require('./server')
 	.init()
-	.listen(port, () => console.log(`Server is up! Listening on ${port}.`));
+	.listen(port, () => log.info(`Server is up! Listening on ${port}.`));

@@ -1,22 +1,25 @@
 'use strict';
 
-var express = require('express');
-var limiter = require('express-rate-limit');
-var compression = require('compression');
+const express = require('express');
+const limiter = require('express-rate-limit');
+const compression = require('compression');
 
-var gulp = require('gulp');
-var plugins = require('gulp-load-plugins')();
+const gulp = require('gulp');
+const plugins = require('gulp-load-plugins')();
 
-var fetch = require('./fetcher');
-var compile = require('./fetcher/compile-jade');
+const log = require('./log');
+const fetch = require('./fetcher');
+const compile = require('./fetcher/compile-jade');
 
-var db = require('./db');
+const db = require('./db');
 
 // Start a new server, set it up and return it.
 module.exports.init = () => {
 
+	log.debug('Initializing Express');
+
 	// Boing
-	let server = express();
+	const server = express();
 
 	// A fix for dealing with DNS for heroku apps
 	if (process.env.HEROKU) server.enable('trust proxy');
@@ -32,7 +35,7 @@ module.exports.init = () => {
 	// register redirection route
 	server.get('/redirect', (req, res, next) => {
 
-		let redirectRequest = req.query.url;
+		const redirectRequest = req.query.url;
 
 		// continue by stack if there's no 'url' query
 		if (!redirectRequest) return next();
@@ -42,7 +45,7 @@ module.exports.init = () => {
 
 		// increment view count as this ip address
 		db.views.incr(redirectRequest, req.ip).catch(err => {
-			if (err) console.error('DB: Increment error', err);
+			if (err) log.error('DB: Increment error', err);
 		});
 
 	});
@@ -53,13 +56,11 @@ module.exports.init = () => {
 		fetch()
 			.then(db.getSortedHeadlines)
 			.then(compile)
-			.then(
-				() => { res.status(200).end(); },
-				err => {
-					if (err) console.log('Fetching error', err);
-					res.status(500).end();
-				}
-			);
+			.then(() => { res.status(200).end(); })
+			.catch(err => {
+				if (err) log.error('Fetching error', err);
+				res.status(500).end();
+			});
 
 	});
 
