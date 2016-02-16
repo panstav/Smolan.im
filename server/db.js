@@ -1,9 +1,7 @@
-'use strict';
-
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const log = require('../log');
+const log = require('./log');
 
 var headlineModel;
 const headlineSchema = {

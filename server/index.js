@@ -9,7 +9,7 @@ const plugins = require('gulp-load-plugins')();
 
 const log = require('./log');
 const fetch = require('./fetch');
-//const compile = require('./compile');
+const compile = require('./compile');
 
 const db = require('./db');
 
@@ -51,9 +51,10 @@ module.exports.init = () => {
 	});
 
 	// register fetcher job initiator
-	server.get('/run-fetcher', getRateLimiter('fetcher'), (req, res) => {
+	server.get('/fetch', getRateLimiter('fetcher'), (req, res) => {
 
 		fetch()
+			.then(compile)
 			.then(() => { res.status(200).end(); })
 			.catch(err => {
 				if (err) log.error(err, 'Fetching error');

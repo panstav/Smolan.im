@@ -1,63 +1,41 @@
 'use strict';
 
-const common = require('../../common');
-
-const mongoose = require('mongoose');
 const moment = require('moment');
-
 const getDomain = require('top-domain');
 
-module.exports = () => new Promise((resolve, reject) => {
+const common = require('../../common');
 
-	const headlineModel = mongoose.model('headline');
+module.exports = (latestHeadlines) => {
 
-	const lastThirtyDays = moment().subtract(30, 'days')
-		.set('hour', 0).set('minute', 0).set('second', 0) // go to beginning of that day
-		.toDate();                                        // return Date object
+	var sortedHeadlines = latestHeadlines.map(toPlainObject)
 
-	headlineModel.find({ 'date': { $gt: lastThirtyDays } }).exec().then(sortHeadlines, reject);
+		// sort by descending date
+		.sort(byDate)
 
-	function sortHeadlines(headlinesFromThisMonth){
+		// limit per-magazine
+		.reduce(maxHeadlinesPerMagazine(), [])
 
-		var sortedHeadlines = headlinesFromThisMonth.map(toPlainObject)
+		// turn url into a redirection route, with url as query
+		// this is for tracking outbound links
+		.map(innerUrls)
 
-			// sort by descending date
-			.sort(byDate)
+		// categorize by today, yesterday and this week
+		.reduce(sortedByTimeCategory, { today: [], yesterday: [], lastSevenDays: [], lastThirtyDays: [] });
 
-			// limit per-magazine
-			.reduce(maxHeadlinesPerMagazine(), [])
-
-			// turn url into a redirection route, with url as query
-			// this is for tracking outbound links
-			.map(headline => {
-				headline.url = common.domain + '/redirect?url=' + headline.url;
-
-				return headline;
-			})
-
-			// categorize by today, yesterday and this week
-			.reduce(sortedByTimeCategory, { today: [], yesterday: [], lastSevenDays: [], lastThirtyDays: [] });
-
-		// fix up date as a last step because it's format is so human-centric
-		for (let category in sortedHeadlines){
-			sortedHeadlines[category] = sortedHeadlines[category].map(dateToHuman);
-		}
-
-		resolve(sortedHeadlines);
+	// fix up date as a last step because it's format is so human-centric
+	for (let category in sortedHeadlines){
+		sortedHeadlines[category] = sortedHeadlines[category].map(dateToHuman);
 	}
 
-});
+	return Promise.resolve(sortedHeadlines);
+};
 
 function toPlainObject(doc){
 	return doc.toObject();
 }
 
 function byDate(a, b){
-	if (moment(a.date)
-			.isBefore(
-				moment(b.date))){
-		return 1;
-	}
+	if (moment(a.date).isBefore(moment(b.date))) return 1;
 
 	return -1;
 }
@@ -87,7 +65,12 @@ function maxHeadlinesPerMagazine(){
 		return arr;
 	};
 
+}
 
+function innerUrls(headline){
+	headline.url = common.domain + '/redirect?url=' + headline.url;
+
+	return headline;
 }
 
 function sortedByTimeCategory(accumulator, headline){
