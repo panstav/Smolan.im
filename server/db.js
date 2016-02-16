@@ -47,5 +47,5 @@ function init(dbUri){
 }
 
 function close(){
-	mongoose.connection.close(Promise.resolve);
+	mongoose.connection.close(() => Promise.resolve);
 }

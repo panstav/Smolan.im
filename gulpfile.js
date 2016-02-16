@@ -1,22 +1,24 @@
 'use strict';
 
-var fs = require('fs');
+const fs = require('fs');
 
-var gulp = require('gulp');
-var plugins = require('gulp-load-plugins')();
+const gulp = require('gulp');
+const plugins = require('gulp-load-plugins')();
 
-var optional = require('optional');
-var moment = require('moment');
-var sitemap = require('sitemap');
+const optional = require('optional');
+const moment = require('moment');
+const sitemap = require('sitemap');
 
-var db = require('./server/db');
-var compile = require('./server/_old/compile-jade');
+const db = require('./server/db');
+const log = require('./server/log');
 
-var common = require('./common');
+const compile = require('./server/compile');
+
+const common = require('./common');
 
 gulp.task('prep-public-dir', () => {
 
-	let copyPaste = [
+	const copyPaste = [
 		'client/manifest.json',
 		'client/logo.png',
 		'client/font-carmela/*',
@@ -51,28 +53,30 @@ gulp.task('js-to-js', () => {
 
 gulp.task('jade-to-html', done => {
 
-	let env = optional('./env');
+	const env = optional('./env');
 	if (env) process.env.MONGO_URI = env.MONGO_URI;
 
 	db.init(process.env.MONGO_URI)
-		.then(db.getSortedHeadlines)
 		.then(compile)
 		.then(db.close)
 		.then(done)
-		.catch(done);
+		.catch(err => {
+			log.error(err);
+			done();
+		});
 
 });
 
 gulp.task('generate-sitemap', done => {
 
-	let urls = [{
+	const urls = [{
 		url: '/',
 		changefreq: 'hourly',
 		priority: 1,
 		lastmod: moment().format('YYYY-MM-DD')
 	}];
 
-	let smolanimMap = sitemap.createSitemap({ urls, hostname: common.domain });
+	const smolanimMap = sitemap.createSitemap({ urls, hostname: common.domain });
 
 	fs.writeFile('public/sitemap.xml', smolanimMap.toString(), done);
 
