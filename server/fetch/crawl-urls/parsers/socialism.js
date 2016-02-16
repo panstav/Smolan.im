@@ -37,7 +37,7 @@ module.exports = res => {
 			};
 
 			mainHeadline.url = mainPath + '/' + mainHeadline.url;
-			mainHeadline.image = domain + mainHeadline.image;
+			if (mainHeadline.image) mainHeadline.image = domain + mainHeadline.image;
 
 			mainHeadline.date = moment(mainHeadline.date.substr(mainHeadline.date.indexOf('|') + 2), 'DD.MM.YYYY').toDate();
 
@@ -54,7 +54,7 @@ module.exports = res => {
 			};
 
 			mainHeadline.url = mainPath + '/' + mainHeadline.url;
-			mainHeadline.image = domain + mainHeadline.image;
+			if (mainHeadline.image) mainHeadline.image = domain + mainHeadline.image;
 
 			mainHeadline.date = moment(mainHeadline.date.substr(mainHeadline.date.indexOf('|') + 2), 'DD.MM.YYYY').toDate();
 
