@@ -1,8 +1,8 @@
 const crawlUrls = require('./crawl-urls');
-//const saveNewArticles = require('./save-new-articles');
+const saveHeadlines = require('./save-headlines');
 
 module.exports = () => {
 
-	return crawlUrls();
+	return crawlUrls().then(saveHeadlines);
 
 };
