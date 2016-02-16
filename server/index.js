@@ -44,9 +44,20 @@ module.exports.init = () => {
 		res.redirect(301, redirectRequest);
 
 		// increment view count as this ip address
-		db.views.incr(redirectRequest, req.ip).catch(err => {
+		incr(redirectRequest, req.ip).catch(err => {
 			if (err) log.error('DB: Increment error', err);
 		});
+
+		function incr(headlineUrl, ip){
+
+			// get this headlines document (but only if it doesn't already have the current ip)
+			const query = { 'url': headlineUrl, 'views.ips': { $nin: [ip] } };
+
+			// append ip and increase count
+			const operation = { $push: { 'views.ips': ip }, $inc: { 'views.count': 1 } };
+
+			return db.models.headlines.update(query, operation).exec();
+		}
 
 	});
 
