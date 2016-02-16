@@ -4,7 +4,7 @@ var _ = require('lodash');
 var cheerio = require('cheerio');
 var moment = require('moment');
 
-var common = require('../../../common');
+var common = require('../../../../common');
 
 module.exports = res => {
 
@@ -43,10 +43,10 @@ module.exports.description = {
 	selector: '#content .post .entry.dotted-bottom',
 	transform: elem => {
 
-		let children = _.get(elem.get(), '[0].children');
+		const children = _.get(elem, '[0].children');
 
 		// get text nodes
-		let textChildren = children.filter(node => node.type === 'text');
+		const textChildren = children.filter(node => node.type === 'text');
 
 		// try each
 		let desc = textChildren.filter(child => {

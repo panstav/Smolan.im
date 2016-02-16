@@ -7,9 +7,7 @@ const cheerio = require('cheerio');
 const common = require('../../common');
 const log = require('../log');
 
-// turn js files in parsers/ to method of this object
-const requireDir = require('require-dir');
-const parsers = requireDir('./parsers');
+
 
 module.exports = () => {
 

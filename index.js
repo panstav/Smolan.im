@@ -17,11 +17,11 @@ require('./server/db')
 	.init(process.env.MONGO_URI)
 	.then(connection => { log.info(`DB is connected to ${ connection.host }:${ connection.port }`); })
 	.catch(err => log.error('DB didn\'t connect', err));
-
-//-=======================================================---
-//------------------ Express Server
-//-=======================================================---
-
+//
+////-=======================================================---
+////------------------ Express Server
+////-=======================================================---
+//
 let port = process.env.PORT || 3000;
 
 require('./server')

@@ -3,7 +3,7 @@
 var cheerio = require('cheerio');
 var moment = require('moment');
 
-var common = require('../../../common');
+var common = require('../../../../common');
 
 var domain = 'http://socialism.org.il';
 var mainPath = 'http://socialism.org.il/maavak';

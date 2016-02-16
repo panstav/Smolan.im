@@ -1,12 +1,12 @@
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-var getSortedHeadlines = require('./get-sorted-headlines');
+const log = require('../log');
 
 var headlineModel;
-var headlineSchema = {
+const headlineSchema = {
 	title:        String,
 	description:  String,
 	source:       String,
@@ -25,13 +25,7 @@ module.exports = {
 	init,
 	close,
 
-	get models(){ return { headlines: headlineModel }; },
-
-	getSortedHeadlines,
-
-	views: {
-		incr
-	}
+	get models(){ return { headlines: headlineModel } }
 
 };
 
@@ -47,7 +41,7 @@ function init(dbUri){
 		mongoose.connection.on('error', reject);
 
 		mongoose.connection.on('disconnected', () => {
-			console.log('Mongoose connection disconnected');
+			log.debug('Mongoose connection disconnected');
 		});
 
 		headlineModel = mongoose.model('headline', mongoose.Schema(headlineSchema));
@@ -55,20 +49,16 @@ function init(dbUri){
 }
 
 function close(){
-
-	return new Promise((resolve, reject) => {
-		mongoose.connection.close(resolve);
-	});
-
+	mongoose.connection.close(Promise.resolve);
 }
 
 function incr(headlineUrl, ip){
 
 	// get this headlines document (but only if it doesn't already have the current ip)
-	let query = { 'url': headlineUrl, 'views.ips': { $nin: [ip] } };
+	const query = { 'url': headlineUrl, 'views.ips': { $nin: [ip] } };
 
 	// append ip and increase count
-	let operation = { $push: { 'views.ips': ip }, $inc: { 'views.count': 1 } };
+	const operation = { $push: { 'views.ips': ip }, $inc: { 'views.count': 1 } };
 
 	return headlineModel.update(query, operation).exec();
 }

@@ -5,7 +5,7 @@ var cheerio = require('cheerio');
 var moment = require('moment');
 moment.locale('he');
 
-var common = require('../../../common');
+var common = require('../../../../common');
 
 let domain = 'http://www.ha-makom.co.il';
 

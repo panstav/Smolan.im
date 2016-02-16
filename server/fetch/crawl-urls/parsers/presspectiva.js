@@ -4,7 +4,7 @@ var _ = require('lodash');
 var cheerio = require('cheerio');
 var moment = require('moment');
 
-var common = require('../../../common');
+var common = require('../../../../common');
 
 module.exports = res => {
 

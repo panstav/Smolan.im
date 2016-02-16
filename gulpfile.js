@@ -10,7 +10,7 @@ var moment = require('moment');
 var sitemap = require('sitemap');
 
 var db = require('./server/db');
-var compile = require('./server/fetcher/compile-jade');
+var compile = require('./server/_old/compile-jade');
 
 var common = require('./common');
 
