@@ -3,6 +3,10 @@
   "version": "0.0.12",
   "description": "Israeli Leftist Articles Aggregator",
   "main": "index.js",
+  "engines": {
+    "node": "4.2.6",
+    "npm": "2.14.12"
+  },
   "dependencies": {
     "async": "1.5.0",
     "babel-preset-es2015": "6.3.13",
