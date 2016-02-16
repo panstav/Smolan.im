@@ -64,6 +64,8 @@ module.exports.init = () => {
 	// register fetcher job initiator
 	server.get('/fetch', getRateLimiter('fetcher'), (req, res) => {
 
+		if (!process.env.LOCAL && req.query.apikey !== process.env.API_KEY) return res.status(400).end();
+
 		fetch()
 			.then(compile)
 			.then(() => { res.status(200).end(); })
