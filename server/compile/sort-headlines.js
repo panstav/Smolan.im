@@ -5,7 +5,7 @@ const getDomain = require('top-domain');
 
 const common = require('../../common');
 
-module.exports = (latestHeadlines) => {
+module.exports = latestHeadlines => {
 
 	var sortedHeadlines = latestHeadlines.map(toPlainObject)
 
@@ -42,11 +42,11 @@ function byDate(a, b){
 
 function maxHeadlinesPerMagazine(){
 
-	var counter = {};
+	const counter = {};
 
 	return (arr, headline) => {
 
-		var domainName = getDomain(headline.url);
+		const domainName = getDomain(headline.url);
 
 		// if counter wasn't initiated for this domain, include it, increment and continue
 		if (!counter[domainName]){
@@ -75,25 +75,25 @@ function innerUrls(headline){
 
 function sortedByTimeCategory(accumulator, headline){
 
-	let thisVeryMoment = moment();
+	const thisVeryMoment = moment();
 
-	let today = thisVeryMoment.format(common.momentDayFormat);
-	let yesterday = thisVeryMoment.subtract(1, 'days').format(common.momentDayFormat);
-	let sevenDaysAgo = thisVeryMoment.subtract(7, 'days');
+	const today = thisVeryMoment.format(common.momentDayFormat);
+	const yesterday = thisVeryMoment.subtract(1, 'days').format(common.momentDayFormat);
+	const sevenDaysAgo = thisVeryMoment.subtract(7, 'days');
 
-	let queryDate = moment(headline.date).format(common.momentDayFormat);
+	const queryDate = moment(headline.date).format(common.momentDayFormat);
 
-	if (queryDate === today){
-		accumulator.today.push(headline);     // was it today?
+	if (queryDate === today){ // was it today?
+		accumulator.today.push(headline);
 
-	} else if (queryDate === yesterday){
-		accumulator.yesterday.push(headline); // was it yesterday?
+	} else if (queryDate === yesterday){ // was it yesterday?
+		accumulator.yesterday.push(headline);
 
-	} else if (sevenDaysAgo.isBefore(headline.date)){
-		accumulator.lastSevenDays.push(headline); // was during last seven days?
+	} else if (sevenDaysAgo.isBefore(headline.date)){ // was during last seven days?
+		accumulator.lastSevenDays.push(headline);
 
-	} else {
-		accumulator.lastThirtyDays.push(headline); // either way - it's this week
+	} else { // either way - it's this week
+		accumulator.lastThirtyDays.push(headline);
 	}
 
 	return accumulator;
