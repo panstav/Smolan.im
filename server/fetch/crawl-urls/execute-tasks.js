@@ -15,7 +15,7 @@ module.exports = tasks => {
 
 			// go through every magazine and through every headline - flatten into
 			arrays.forEach(arr => {
-				arr.forEach(item => {
+				if (arr) arr.forEach(item => {
 					results.push(item);
 				});
 			});

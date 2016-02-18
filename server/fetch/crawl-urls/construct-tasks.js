@@ -22,13 +22,18 @@ function asyncRequest(name){
 
 	return done => {
 
-		log.debug(`Getting ${name}`);
-
 		got(parser.headlinesSourceUrl, gotOptions)
+			.catch(logAndContinue)
 			.then(parser)
 			.then(parseIntoEach)
 			.then(headlines => done(null, headlines))
-			.catch(err => done(err));
+			.catch(logAndContinue);
+
+		function logAndContinue(err){
+			log.error(err, 'Got error');
+
+			done();
+		}
 
 	};
 

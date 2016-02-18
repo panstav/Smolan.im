@@ -66,12 +66,16 @@ module.exports.init = () => {
 
 		if (!process.env.LOCAL && req.query.apikey !== process.env.API_KEY) return res.status(400).end();
 
-		fetch()
-			.then(compile)
-			.then(() => { res.status(200).end(); })
+		res.status(200).end();
+
+		log.info('Fetching initiated');
+
+		fetch().then(compile)
+			.then(() => {
+				log.info('Fetching successful');
+			})
 			.catch(err => {
 				if (err) log.error(err, 'Fetching error');
-				res.status(500).end();
 			});
 
 	});
