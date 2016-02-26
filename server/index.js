@@ -4,6 +4,8 @@ const express = require('express');
 const limiter = require('express-rate-limit');
 const compression = require('compression');
 
+const comment = require('./comment');
+
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 
@@ -31,6 +33,13 @@ module.exports.init = () => {
 	server.get('/', getRateLimiter('index'), (req, res) => {
 		res.sendFile('index.html', { root: 'public', maxAge: process.env.NODE_ENV === 'production' ? 1000*60*30 : 0 });
 	});
+
+	const auth = () => (req, res, next) => {
+		req.user = { name: 'stav', image: 'http://example.com/image.jpg', link: 'http://example.com' };
+		next();
+	};
+
+	server.post('/comment', auth(), comment);
 
 	// register redirection route
 	server.get('/redirect', (req, res, next) => {
