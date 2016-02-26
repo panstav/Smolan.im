@@ -25,7 +25,7 @@ module.exports.init = () => {
 	if (process.env.HEROKU) server.enable('trust proxy');
 
 	// compress everything
-	server.use(compression());
+	if (process.env.NODE_ENV === 'production') server.use(compression());
 
 	// register main route
 	server.get('/', getRateLimiter('index'), (req, res) => {
