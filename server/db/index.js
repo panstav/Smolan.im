@@ -3,7 +3,7 @@ mongoose.Promise = global.Promise;
 
 const log = require('./../log');
 
-var headlineModel;
+var headlineModel, userModel;
 
 module.exports = {
 
@@ -12,6 +12,7 @@ module.exports = {
 
 	get models(){
 		return {
+			users: userModel,
 			headlines: headlineModel
 		}
 	}
@@ -33,6 +34,7 @@ function init(dbUri){
 			log.debug('Mongoose connection disconnected');
 		});
 
+		userModel = mongoose.model('user', mongoose.Schema(require('./user')));
 		headlineModel = mongoose.model('headline', mongoose.Schema(require('./headline')));
 	});
 }
