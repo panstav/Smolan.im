@@ -14,8 +14,8 @@ module.exports = res => {
 
 	return new Promise((resolve, reject) => {
 
-		let mainHeadlines = $('article.hero').not(premiumArticle).map(parseMain).get();
-		let restHeadlines = $('article:not(.hero)').not(premiumArticle).not(specialArticles).map(parseRest).get();
+		let mainHeadlines = $('article.hero').not(premiumArticle).not(videoArticles).map(parseMain).get();
+		let restHeadlines = $('article:not(.hero)').not(premiumArticle).not(videoArticles).not(specialArticles).map(parseRest).get();
 
 		let allHeadlines = [].concat(mainHeadlines, restHeadlines)
 			.slice(0, common.itemsPerMagazine)
@@ -65,6 +65,12 @@ module.exports = res => {
 			let keyIcons = $('.t-byline .icn--key', elem).get();
 
 			return keyIcons.length > 0;
+		}
+
+		function videoArticles(i, elem){
+			const videoElem = $('video', elem).get();
+
+			return !!videoElem.length;
 		}
 
 		function specialArticles(i, elem){
