@@ -5,15 +5,15 @@ const getDomain = require('top-domain');
 
 const common = require('../../common');
 
-const thisVeryMoment = moment();
+module.exports = latestHeadlines => {
 
-const today = thisVeryMoment.format(common.momentDayFormat);
-const yesterday = thisVeryMoment.subtract(1, 'days').format(common.momentDayFormat);
-const sevenDaysAgo = thisVeryMoment.subtract(7, 'days');
+	const thisVeryMoment = moment();
 
-module.exports = (latestHeadlines) => {
+	const today = thisVeryMoment.format(common.momentDayFormat);
+	const yesterday = thisVeryMoment.subtract(1, 'days').format(common.momentDayFormat);
+	const sevenDaysAgo = thisVeryMoment.subtract(7, 'days');
 
-	var sortedHeadlines = latestHeadlines.map(toPlainObject)
+	const sortedHeadlines = latestHeadlines.map(toPlainObject)
 
 		// sort by descending date
 		.sort(byDate)
@@ -31,60 +31,61 @@ module.exports = (latestHeadlines) => {
 	}
 
 	return Promise.resolve(sortedHeadlines);
-};
 
-function toPlainObject(doc){
-	return doc.toObject();
-}
+	function toPlainObject(doc){
+		return doc.toObject();
+	}
 
-function byDate(a, b){
-	if (moment(a.date).isBefore(moment(b.date))) return 1;
+	function byDate(a, b){
+		if (moment(a.date).isBefore(moment(b.date))) return 1;
 
-	return -1;
-}
+		return -1;
+	}
 
-function innerUrls(headline){
-	headline.url = common.domain + '/redirect?url=' + headline.url;
+	function innerUrls(headline){
+		headline.url = common.domain + '/redirect?url=' + headline.url;
 
-	return headline;
-}
+		return headline;
+	}
 
-function sortedByTimeCategory(accumulator, currentHeadline){
+	function sortedByTimeCategory(accumulator, currentHeadline){
 
-	const targetTimeCategory = getTimeCatorgory();
+		const targetTimeCategory = getTimeCatorgory();
 
-	if (sourceDidntBinge(targetTimeCategory)) accumulator[targetTimeCategory].push(currentHeadline);
+		if (sourceDidntBinge(targetTimeCategory)) accumulator[targetTimeCategory].push(currentHeadline);
 
-	return accumulator;
+		return accumulator;
 
-	function getTimeCatorgory(){
-		const queryDate = moment(currentHeadline.date).format(common.momentDayFormat);
+		function getTimeCatorgory(){
+			const queryDate = moment(currentHeadline.date).format(common.momentDayFormat);
 
-		if (queryDate === today){ // was it today?
-			return 'today';
+			if (queryDate === today){ // was it today?
+				return 'today';
 
-		} else if (queryDate === yesterday){ // was it yesterday?
-			return 'yesterday';
+			} else if (queryDate === yesterday){ // was it yesterday?
+				return 'yesterday';
 
-		} else if (sevenDaysAgo.isBefore(currentHeadline.date)){ // was during last seven days?
-			return 'lastSevenDays';
+			} else if (sevenDaysAgo.isBefore(currentHeadline.date)){ // was during last seven days?
+				return 'lastSevenDays';
 
-		} else { // either way - it's this week
-			return 'lastThirtyDays';
+			} else { // either way - it's this week
+				return 'lastThirtyDays';
+			}
+
+		}
+
+		function sourceDidntBinge(timeCategory){
+			const appearancesAtTimeCategory = accumulator[timeCategory].filter(headline => headline.source === currentHeadline.source);
+
+			return appearancesAtTimeCategory.length < common.maxPerMagazingForToday;
 		}
 
 	}
 
-	function sourceDidntBinge(timeCategory){
-		const appearancesAtTimeCategory = accumulator[timeCategory].filter(headline => headline.source === currentHeadline.source);
+	function dateToHuman(headline){
+		headline.date = moment(headline.date).format(common.momentHumanFormat);
 
-		return appearancesAtTimeCategory.length < common.maxPerMagazingForToday;
+		return headline;
 	}
 
-}
-
-function dateToHuman(headline){
-	headline.date = moment(headline.date).format(common.momentHumanFormat);
-
-	return headline;
-}
+};
