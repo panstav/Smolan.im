@@ -23,17 +23,9 @@ function asyncRequest(name){
 	return done => {
 
 		got(parser.headlinesSourceUrl, gotOptions)
-			.catch(logAndContinue)
-			.then(parser)
+			.then(parser, err => { log.error(err, 'Got Error'); done(); })
 			.then(parseIntoEach)
-			.then(headlines => done(null, headlines))
-			.catch(logAndContinue);
-
-		function logAndContinue(err){
-			log.error(err, 'Got error');
-
-			done();
-		}
+			.then(headlines => done(null, headlines));
 
 	};
 
@@ -48,9 +40,8 @@ function asyncRequest(name){
 				if (headline.description) return resolve(headline);
 
 				got(headline.url, gotOptions)
-					.then(fixDescription)
-					.then(fixedDesc => { headline.description = fixedDesc; return resolve(headline); })
-					.catch(reject);
+					.then(fixDescription, err => { log.error(err, 'Got Error'); done(); })
+					.then(fixedDesc => { headline.description = fixedDesc; return resolve(headline); });
 
 			});
 		}
