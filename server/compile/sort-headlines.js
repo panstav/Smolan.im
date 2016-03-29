@@ -4,8 +4,11 @@ const moment = require('moment');
 const getDomain = require('top-domain');
 
 const common = require('../../common');
+const log = require('../log');
 
 module.exports = latestHeadlines => {
+
+	log.debug('Sorting headlines for display');
 
 	const thisVeryMoment = moment();
 

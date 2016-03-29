@@ -1,7 +1,7 @@
 const bunyan = require('bunyan');
 
 const bunyanOptions = {
-	name: 'Mican',
+	name: 'Smolanim',
 	level: process.env.DEBUG ? 'debug' : 'info',
 	src: process.env.SHOW_SRC,
 	serializers: bunyan.stdSerializers

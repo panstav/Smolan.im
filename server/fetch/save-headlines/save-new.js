@@ -5,6 +5,8 @@ module.exports = newHeadlines => {
 
 	return new Promise((resolve, reject) => {
 
+		log.debug('Saving new headlines');
+
 		db.models.headlines.create(newHeadlines, err => {
 			if (err) return reject(err);
 

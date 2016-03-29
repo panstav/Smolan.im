@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 
 const common = require('../../common');
+const log = require('../log');
 
 module.exports = function(sortedHeadlines){
 
@@ -20,6 +21,8 @@ module.exports = function(sortedHeadlines){
 	if (process.env.NODE_ENV === 'production') locals.production = true;
 
 	return new Promise((resolve, reject) => {
+
+		log.debug('Start gulp compilation task');
 
 		gulp.src('client/index.jade')
 			.pipe(plugins.jade({ locals, pretty: process.env.NODE_ENV !== 'production' }))
