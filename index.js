@@ -1,29 +1,18 @@
-'use strict';
-
-const optional = require('optional');
-
-const log = require('./server/log');
-
-const env = optional('./env');
-if (env) for (let i in env) process.env[i] = env[i];
-log.info(`ENV has set`);
-log.debug({ env });
-
-//-=======================================================---
-//------------------ Database
-//-=======================================================---
-
-require('./server/db')
-	.init(process.env.MONGO_URI)
-	.then(connection => { log.info(`DB is connected to ${ connection.host }:${ connection.port }`); })
-	.catch(err => log.error('DB didn\'t connect', err));
+// const initServer = require('./server');
 //
-////-=======================================================---
-////------------------ Express Server
-////-=======================================================---
-//
-let port = process.env.PORT || 3000;
+// initServer().listen(process.env.PORT || 3000, () => {
+// 	console.log(`Server is up! Listening on ${port}.`);
+// });
 
-require('./server')
-	.init()
-	.listen(port, () => log.info(`Server is up! Listening on ${port}.`));
+const crawler = require('./crawler');
+
+crawler()
+	.then(headlines => {
+		console.log(headlines.length);
+		return headlines;
+	})
+	.then(console.log)
+	.catch(err => {
+		console.error(err.message);
+		console.error(err.stack);
+	});

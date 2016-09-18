@@ -8,79 +8,7 @@ var common = require('../../../../common');
 
 let domain = 'http://www.haaretz.co.il';
 
-module.exports = res => {
-
-	var $ = cheerio.load(res.body);
-
-	return new Promise((resolve, reject) => {
-
-		let mainHeadlines = $('article.hero').not(premiumArticle).not(videoArticles).map(parseMain).get();
-		let restHeadlines = $('article:not(.hero)').not(premiumArticle).not(videoArticles).not(specialArticles).map(parseRest).get();
-
-		let allHeadlines = [].concat(mainHeadlines, restHeadlines)
-			.slice(0, common.itemsPerMagazine)
-			.map(headline => {
-				headline.source = 'הארץ';
-
-				return headline;
-			});
-
-		resolve(allHeadlines);
-
-		function parseMain(i, container){
-
-			let mainHeadline = {
-				title: $('h1', container).text(),
-				url: $('h1', container).parent().attr('href'),
-				image: $('picture img', container).attr('srcset'),
-				date: $('.t-byline time', container).attr('datetime')
-			};
-
-			mainHeadline.url = domain + mainHeadline.url;
-			if (mainHeadline.image) mainHeadline.image = domain + mainHeadline.image;
-
-			mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').toDate();
-
-			return mainHeadline;
-		}
-
-		function parseRest(i, container){
-
-			let mainHeadline = {
-				title: $('.media__content h3', container).text().replace(/[\n\t\r]/g,'').trim(),
-				url: $('a.media', container).attr('href'),
-				image: $('picture img', container).attr('srcset'),
-				date: $('.t-byline time', container).attr('datetime')
-			};
-
-			mainHeadline.url = domain + mainHeadline.url;
-			if (mainHeadline.image)mainHeadline.image = domain + mainHeadline.image;
-
-			mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').toDate();
-
-			return mainHeadline;
-		}
-
-		function premiumArticle(i, elem){
-			let keyIcons = $('.t-byline .icn--key', elem).get();
-
-			return keyIcons.length > 0;
-		}
-
-		function videoArticles(i, elem){
-			const videoElem = $('video', elem).get();
-
-			return !!videoElem.length;
-		}
-
-		function specialArticles(i, elem){
-			return $(elem).attr('data-back') === 'teaser';
-		}
-
-	});
-
-};
-
+module.exports.parser = parser;
 module.exports.headlinesSourceUrl = domain + '/news';
 module.exports.description = {
 	selector: 'article header > p, article .article__entry > p',
@@ -102,3 +30,30 @@ module.exports.description = {
 		return found;
 	}
 };
+
+function parser(res){
+
+	var $ = cheerio.load(res.body);
+
+	return new Promise((resolve, reject) =>{
+
+		let mainHeadlines = $('article.hero').not(premiumArticle).not(videoArticles).map(parseMain).get();
+		let restHeadlines = $('article:not(.hero)').not(premiumArticle).not(videoArticles).not(specialArticles).map(parseRest).get();
+
+		let allHeadlines = [].concat(mainHeadlines, restHeadlines)
+			.slice(0, common.itemsPerMagazine)
+			.map(headline =>{
+				headline.source = 'הארץ';
+
+				return headline;
+			});
+
+		resolve(allHeadlines);
+
+
+
+
+
+	});
+
+}

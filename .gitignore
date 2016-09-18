@@ -3,7 +3,8 @@
 /node_modules/
 
 /db/headlines.json
-/env.js
+/.env
+/client/current-headlines.json
 
 /dump.rdb
 /npm-debug.log

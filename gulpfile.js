@@ -8,6 +8,7 @@ const plugins = require('gulp-load-plugins')();
 const optional = require('optional');
 const moment = require('moment');
 const sitemap = require('sitemap');
+const extend = require('extend');
 
 const db = require('./server/db');
 const log = require('./server/log');
@@ -53,17 +54,14 @@ gulp.task('js-to-js', () => {
 
 gulp.task('jade-to-html', done => {
 
-	const env = optional('./env');
-	if (env) process.env.MONGO_URI = env.MONGO_URI;
+	const jadeOptions = {
+		locals: extend({}, require('./client/current-headlines.json')),
+		pretty: process.env.NODE_ENV !== 'production'
+	};
 
-	db.init(process.env.MONGO_URI)
-		.then(compile)
-		.then(db.close)
-		.then(done)
-		.catch(err => {
-			log.error(err);
-			done();
-		});
+	gulp.src('client/index.jade')
+		.pipe(plugins.jade(jadeOptions))
+		.pipe(gulp.dest('public'))
 
 });
 

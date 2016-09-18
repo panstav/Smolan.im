@@ -24,11 +24,7 @@ module.exports = function(sortedHeadlines){
 
 		log.debug('Start gulp compilation task');
 
-		gulp.src('client/index.jade')
-			.pipe(plugins.jade({ locals, pretty: process.env.NODE_ENV !== 'production' }))
-			.pipe(gulp.dest('public'))
-			.on('error', reject)
-			.on('end', resolve.bind(null, locals));
+		
 
 	});
 

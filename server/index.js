@@ -15,7 +15,7 @@ const compile = require('./compile');
 
 const db = require('./db');
 
-// Start a new server, set it up and return it.
+// Start a new initServer, set it up and return it.
 module.exports.init = () => {
 
 	log.debug('Initializing Express');
