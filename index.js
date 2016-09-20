@@ -4,9 +4,9 @@
 // 	console.log(`Server is up! Listening on ${port}.`);
 // });
 
-const crawler = require('./crawler');
+const crawl = require('./crawler');
 
-crawler()
+crawl()
 	.then(headlines => {
 		console.log(headlines.length);
 		return headlines;

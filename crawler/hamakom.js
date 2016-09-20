@@ -28,7 +28,6 @@ function parseHeadlines($){
 		};
 
 		mainHeadline.url = domain + mainHeadline.url;
-		mainHeadline.authorUrl = domain + mainHeadline.url;
 
 		mainHeadline.date = moment(mainHeadline.date.replace('\'', '׳'), 'DD MMM, YYYY').toDate();
 
