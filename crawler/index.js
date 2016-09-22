@@ -22,12 +22,7 @@ function crawlAndParse(magazine){
 	return got(magazine.headlinesUrl, gotOptions)
 		.then(res => magazine.parseHeadlines(cheerio.load(res.body)))
 		.then(headlines => attachSource(headlines, magazine.source))
-		.then(headlines => Promise.all(headlines.map(populateDescription)))
-		.catch(err => {
-			console.log(`Error: Crawling ${magazine.source}`);
-			console.error(err.message);
-			console.error(err.stack);
-		});
+		.then(headlines => Promise.all(headlines.map(populateDescription)));
 
 	function populateDescription(headline){
 		if (headline.description){
@@ -38,7 +33,7 @@ function crawlAndParse(magazine){
 		return got(headline.url, gotOptions)
 			.then(res => {
 				const $ = cheerio.load(res.body);
-				if (magazine.description.transform) return magazine.description.transform($);
+				if ('transform' in magazine.description) return magazine.description.transform($);
 				return $(magazine.description.selector).text();
 			})
 			.then(description => {

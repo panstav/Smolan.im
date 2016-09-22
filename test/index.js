@@ -24,7 +24,8 @@ describe('Crawler', () => {
 				headlines = result;
 			})
 			.catch(err => {
-				assert(err === undefined);
+				console.error(err.message);
+				console.error(err.stack);
 			});
 
 	});
@@ -74,7 +75,7 @@ describe('Crawler', () => {
 			assert(is.not.empty(headline.source));
 
 			assert(is.string(headline.description));
-			assert(is.not.empty(headline.description));
+			assert(headline.description === '' || is.not.empty(headline.description));
 
 		});
 
