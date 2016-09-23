@@ -1,44 +1,40 @@
+const debug = require('debug')('db');
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const log = require('./../log');
-
-var headlineModel, userModel;
+const headlineModel = mongoose.model('headline', mongoose.Schema(require('./headline')));
 
 module.exports = {
 
 	init,
 	close,
-
-	get models(){
-		return {
-			users: userModel,
-			headlines: headlineModel
-		}
+	models: {
+		headlines: headlineModel
 	}
 
 };
 
 function init(dbUri){
-	return new Promise((resolve, reject) => {
 
-		mongoose.connect(dbUri);
-
+	const p = new Promise((resolve, reject) => {
+		mongoose.connection.on('error', reject);
+		mongoose.connection.on('disconnected', () => debug('Mongoose connection disconnected'));
 		mongoose.connection.on('connected', () => {
+			debug('Mongoose connection established');
 			resolve(mongoose.connection);
 		});
 
-		mongoose.connection.on('error', reject);
-
-		mongoose.connection.on('disconnected', () => {
-			log.debug('Mongoose connection disconnected');
-		});
-
-		userModel = mongoose.model('user', mongoose.Schema(require('./user')));
-		headlineModel = mongoose.model('headline', mongoose.Schema(require('./headline')));
+		mongoose.connect(dbUri);
 	});
+
+	return p.catch(err => {
+		debug(err.message);
+		debug(err.stack);
+	});
+
 }
 
 function close(){
-	mongoose.connection.close(() => Promise.resolve);
+	return new Promise(mongoose.connection.close);
 }

@@ -1,4 +1,4 @@
-'use strict';
+const debug = require('debug')('server');
 
 const express = require('express');
 const limiter = require('express-rate-limit');
@@ -18,7 +18,7 @@ const db = require('./db');
 // Start a new initServer, set it up and return it.
 module.exports.init = () => {
 
-	log.debug('Initializing Express');
+	debug('Initializing Express');
 
 	// Boing
 	const server = express();
