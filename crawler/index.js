@@ -25,7 +25,10 @@ function crawlAndParse(magazine){
 		.then(headlines => Promise.all(headlines.map(populateDescription)));
 
 	function populateDescription(headline){
-		if (headline.description){
+
+		if (!'description' in magazine) return headline;
+
+		if ('description' in headline){
 			headline.description = normalize(headline.description);
 			return headline;
 		};
