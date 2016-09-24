@@ -5,7 +5,7 @@ const server = require('./server');
 const db = require('./db');
 require('./cron')();
 
-db.init(process.env.MONGO_URI);
+db.init();
 
 const port = process.env.PORT || 3000;
 server.init().listen(port, () => {

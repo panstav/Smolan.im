@@ -1,20 +1,15 @@
-'use strict';
-
 const fs = require('fs');
 
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
+const dotenv = require('dotenv').config();
 
 const optional = require('optional');
 const moment = require('moment');
 const sitemap = require('sitemap');
 const extend = require('extend');
 
-const db = require('./server/db');
-const log = require('./server/log');
-
-const compile = require('./server/compile');
-
+const db = require('./db');
 const common = require('./common');
 
 gulp.task('prep-public-dir', () => {
@@ -52,16 +47,43 @@ gulp.task('js-to-js', () => {
 
 });
 
-gulp.task('jade-to-html', done => {
+gulp.task('jade-to-html', () => {
+
+	const locals = {
+		domain: common.domain,
+		bingVerification: '66210C1BD52CB9DFEAF89E92C2D0C35C',
+		siteName: 'שמאלנים',
+		fullTitle: 'שמאלנים - ויש נקודה.',
+		description: 'אוסף מאמרים מהאתרים: הארץ, המקום הכי חם בגהינום, העוקץ, הטלויזיה החברתית, שיחה מקומית מאבק סוציאליסטי ו- פרספקטיבה. זכרו - כמו עם כל גוף ידע - השתמשו בביקורתיות ובתבונה כאשר אתם קוראים "אקטואליה".',
+		logoUrl: common.domain + '/logo.png',
+		categorizedDB: [] // sortedHeadlines
+	};
+
+	if (process.env.NODE_ENV === 'production') locals.production = true;
 
 	const jadeOptions = {
-		locals: extend({}, require('./client/current-headlines.json')),
+		locals: extend({}, locals),
 		pretty: process.env.NODE_ENV !== 'production'
 	};
 
-	gulp.src('client/index.jade')
+	return gulp.src('client/index.jade')
+		.pipe(plugins.data(getHeadlines))
 		.pipe(plugins.jade(jadeOptions))
-		.pipe(gulp.dest('public'))
+		.pipe(gulp.dest('public'));
+
+	function getHeadlines(file, done){
+
+		return db.init()
+			.then(() => {
+				return db.models.headlines.find({ date: { $gte: moment().subtract(3, 'days').toDate() } }).exec()
+			})
+			.then(headlines => {
+				db.close();
+				jadeOptions.locals.headlines = headlines.map(headline => headline.toObject());
+				done();
+			});
+
+	}
 
 });
 

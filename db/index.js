@@ -15,7 +15,7 @@ module.exports = {
 
 };
 
-function init(dbUri){
+function init(){
 
 	const p = new Promise((resolve, reject) => {
 		mongoose.connection.on('error', reject);
@@ -25,7 +25,7 @@ function init(dbUri){
 			resolve(mongoose.connection);
 		});
 
-		mongoose.connect(dbUri);
+		mongoose.connect(process.env.MONGO_URI);
 	});
 
 	return p.catch(err => {
