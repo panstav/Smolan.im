@@ -4,6 +4,7 @@ const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const dotenv = require('dotenv').config();
 
+const _ = require('lodash');
 const optional = require('optional');
 const moment = require('moment');
 const sitemap = require('sitemap');
@@ -62,7 +63,7 @@ gulp.task('jade-to-html', () => {
 	if (process.env.NODE_ENV === 'production') locals.production = true;
 
 	const jadeOptions = {
-		locals: extend({}, locals),
+		locals,
 		pretty: process.env.NODE_ENV !== 'production'
 	};
 
@@ -74,14 +75,37 @@ gulp.task('jade-to-html', () => {
 	function getHeadlines(file, done){
 
 		return db.init()
-			.then(() => {
-				return db.models.headlines.find({ date: { $gte: moment().subtract(3, 'days').toDate() } }).exec()
-			})
+			.then(fetchAndParseHeadlines)
 			.then(headlines => {
 				db.close();
-				jadeOptions.locals.headlines = headlines.map(headline => headline.toObject());
+
+				// append headlines, grouped by date
+				jadeOptions.locals.headlines = _.groupBy(headlines, headline => headline.date);
+
 				done();
+			}).catch(err => {
+				console.log(err.message);
+				console.error(err.stack);
 			});
+
+		function fetchAndParseHeadlines(){
+
+			const sources = {
+				haaretz: 'הארץ',
+				hamakom: 'המקום הכי חם בגהינום',
+				hevratit: 'הטלויזיה החברתית',
+				mekomit: 'שיחה מקומית',
+				presspectiva: 'פרספקטיבה'
+			};
+
+			return db.models.headlines.find({ date: { $gte: moment().subtract(10, 'days').toDate() } }).exec()
+				.then(headlines => headlines.map(headline => headline.toObject()))
+				.then(headlines => headlines.map(headline => {
+					headline.date = moment(headline.date).format('MM/DD');
+					headline.sourceHeb = sources[headline.source];
+					return headline;
+				}));
+		}
 
 	}
 

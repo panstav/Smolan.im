@@ -1,41 +1,25 @@
 ol.A4
 
-	if categorizedDB.today.length > 0
+	each datedHeadlines,date in headlines
 
-		li.today
-
-			h2 היום
-
-			ul.headlines
-				each item in categorizedDB.today
-					include list-item
-
-	if categorizedDB.yesterday.length > 0
-
-		li.yesterday
-
-			h2 אתמול
+		li
+			h2=date
 
 			ul.headlines
-				each item in categorizedDB.yesterday
-					include list-item
+				each headline in datedHeadlines
 
-	if categorizedDB.lastSevenDays.length > 0
+					li
 
-		li.this-week
+						a(href=headline.url, title=headline.title)
 
-			h2 השבוע
+							if headline.image
+								.image(style="background-image: url(#{ headline.image })")
 
-			ul.headlines
-				each item in categorizedDB.lastSevenDays
-					include list-item
+							.details
+								.stats
+									span.source=headline.sourceHeb
+									span &middot;
+									span.date=headline.date
+								h3=headline.title
+								p=headline.description
 
-	if categorizedDB.lastThirtyDays.length > 0
-
-		li.last-thirty-days
-
-			h2 החודש
-
-			ul.headlines
-				each item in categorizedDB.lastThirtyDays
-					include list-item
