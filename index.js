@@ -2,7 +2,7 @@ const dotenv = require('dotenv').config({ silent: process.env.NODE_ENV === 'prod
 const debug = require('debug')('node');
 
 const server = require('./server');
-const db = require('./server/db');
+const db = require('./db');
 require('./cron')();
 
 db.init(process.env.MONGO_URI);

@@ -13,7 +13,7 @@ const log = require('./log');
 const fetch = require('./fetch');
 const compile = require('./compile');
 
-const db = require('./db');
+const db = require('../db');
 
 // Start a new initServer, set it up and return it.
 module.exports.init = () => {

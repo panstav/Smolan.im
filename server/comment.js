@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const db = require('./db');
+const db = require('../db');
 const log = require('./log');
 
 const validMongoId = require('./valid-mongo-id');

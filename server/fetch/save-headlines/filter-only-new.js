@@ -1,7 +1,7 @@
 const async = require('async');
 
 const log = require('../../log');
-const db = require('../../db');
+const db = require('../../../db');
 
 module.exports = headlines => {
 	return new Promise((resolve, reject) => {
