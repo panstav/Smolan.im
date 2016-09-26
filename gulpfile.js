@@ -100,8 +100,9 @@ gulp.task('jade-to-html', () => {
 
 			return db.models.headlines.find({ date: { $gte: moment().subtract(10, 'days').toDate() } }).exec()
 				.then(headlines => headlines.map(headline => headline.toObject()))
+				.then(headlines => headlines.sort((a,b) => a.date >= b.date ? -1 : 1))
 				.then(headlines => headlines.map(headline => {
-					headline.date = moment(headline.date).format('MM/DD');
+					headline.date = moment(headline.date).format('DD/MM');
 					headline.sourceHeb = sources[headline.source];
 					return headline;
 				}));
