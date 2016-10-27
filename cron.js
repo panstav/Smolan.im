@@ -3,6 +3,7 @@ const cron = require('node-cron');
 
 const crawler = require('./crawler');
 const db = require('./db');
+const compileJade = require('./compile-jade');
 
 module.exports = registerCron;
 
@@ -17,14 +18,18 @@ function registerCron(){
 
 	function runTask(){
 		debug('Running crawler job');
-		crawlTask();
+
+		crawlTask().then(() => {
+			debug('Compiling Jade with new headlines');
+			compileJade();
+		});
 	}
 
 }
 
 function crawlTask(){
 
-	crawler()
+	return crawler()
 		.then(headlines =>{
 			debug(`Crawler got ${headlines.length} headlines.`);
 			return Promise.all(headlines.map(updateHeadlines));
