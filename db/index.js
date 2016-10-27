@@ -36,5 +36,7 @@ function init(){
 }
 
 function close(){
-	return new Promise(mongoose.connection.close);
+	return new Promise((resolve, reject) => {
+		mongoose.connection.close(resolve);
+	});
 }

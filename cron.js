@@ -1,8 +1,8 @@
 const debug = require('debug')('cron');
 const cron = require('node-cron');
 
-const crawler = require('./crawler');
-const db = require('./db');
+const crawlHeadlines = require('./crawl-headlines');
+const fetchHeadlines = require('./fetch-headlines-from-db');
 const compileJade = require('./compile-jade');
 
 module.exports = registerCron;
@@ -19,29 +19,22 @@ function registerCron(){
 	function runTask(){
 		debug('Running crawler job');
 
-		crawlTask().then(() => {
-			debug('Compiling Jade with new headlines');
-			compileJade();
-		});
-	}
-
-}
-
-function crawlTask(){
-
-	return crawler()
-		.then(headlines =>{
-			debug(`Crawler got ${headlines.length} headlines.`);
-			return Promise.all(headlines.map(updateHeadlines));
-		})
-		.then(() => debug('Crawler finished saving headlines'))
-		.catch(err => {
-			console.error(err.message);
-			console.error(err.stack);
-		});
-
-	function updateHeadlines(headline){
-		return db.models.headlines.update({ url: headline.url }, headline, { upsert: true }).exec();
+		crawlHeadlines()
+			.then(() => {
+				debug('Fetching headlines from db');
+				return fetchHeadlines();
+			})
+			.then(headlines => {
+				debug('Compiling Jade with new headlines');
+				return compileJade(headlines);
+			})
+			.then(() => {
+				debug('Done');
+			})
+			.catch(err => {
+				console.error(err.message);
+				console.error(err.stack);
+			});
 	}
 
 }

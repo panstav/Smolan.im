@@ -13,7 +13,8 @@ ol.A4
 						a(href=headline.url, title=headline.title)
 
 							if headline.image
-								.image(style="background-image: url(#{ headline.image })")
+								<!-- #{headline.image} -->
+								.image(style="background-image: url(" + headline.image + ")")
 
 							.details
 								.stats

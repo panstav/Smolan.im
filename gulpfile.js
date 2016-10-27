@@ -47,8 +47,6 @@ gulp.task('js-to-js', () => {
 
 });
 
-gulp.task('jade-to-html', compileJade);
-
 gulp.task('generate-sitemap', done => {
 
 	const urls = [{
@@ -64,4 +62,4 @@ gulp.task('generate-sitemap', done => {
 
 });
 
-gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'js-to-js', 'jade-to-html', 'generate-sitemap'));
+gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'js-to-js', 'generate-sitemap'));
