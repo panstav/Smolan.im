@@ -7,17 +7,22 @@ const db = require('./db');
 module.exports = registerCron;
 
 function registerCron(){
-	const EVERY_MINUTE = '*/1 * * * *';
-	const EVERY_THREE_HOURS = '* */3 * * *';
 
-	const interval = process.env.NODE_ENV === 'production' ? EVERY_THREE_HOURS : EVERY_MINUTE;
+	if (process.env.NODE_ENV === 'production'){
+		debug('Registering crawling job');
+		cron.schedule('* */3 * * *', runTask, true);
+	} else {
+		debug('Skipping crawling job for non-production environment');
+	}
 
-	debug('Registering crawling job');
-	cron.schedule(interval, crawlTask, true);
+	function runTask(){
+		debug('Running crawler job');
+		crawlTask();
+	}
+
 }
 
 function crawlTask(){
-	debug('Running crawler job');
 
 	crawler()
 		.then(headlines =>{
@@ -25,8 +30,8 @@ function crawlTask(){
 			return Promise.all(headlines.map(updateHeadlines));
 		})
 		.then(() => debug('Crawler finished saving headlines'))
-		.catch(err =>{
-			debug(err.message);
+		.catch(err => {
+			console.error(err.message);
 			console.error(err.stack);
 		});
 
