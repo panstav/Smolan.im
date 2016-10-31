@@ -1,9 +1,9 @@
 const debug = require('debug')('cron');
 const cron = require('node-cron');
 
-const crawlHeadlines = require('./crawl-headlines');
-const fetchHeadlines = require('./fetch-headlines-from-db');
-const compileJade = require('./compile-jade');
+const crawlHeadlines = require('./lib/crawl-headlines');
+const fetchHeadlines = require('./lib/fetch-headlines-from-db');
+const compileJade = require('./lib/compile-jade');
 
 module.exports = registerCron;
 
