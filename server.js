@@ -8,6 +8,8 @@ module.exports.init = () => {
 
 	debug('Initializing Express');
 
+	const maxAge = process.env.NODE_ENV === 'production' ? 1000*60*60*3 : 0 ;
+
 	// Boing
 	const server = express();
 
@@ -18,15 +20,14 @@ module.exports.init = () => {
 	server.use(compression());
 
 	server.get('/', (req, res) => {
-		res.sendFile('index.html', { root: 'public' });
+		res.sendFile('index.html', { root: 'public', maxAge });
 	});
 
-	server.use(express.static('public', { maxAge: process.env.NODE_ENV === 'production' ? 1000*60*60*24*7 : 0 }));
+	server.use(express.static('public', { maxAge }));
 
 	server.use(fourOfour);
 
 	return server;
-
 };
 
 function fourOfour(req, res){
