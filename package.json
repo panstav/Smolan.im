@@ -16,7 +16,6 @@
     "dotenv": "2.0.0",
     "espower-loader": "1.0.1",
     "express": "4.13.3",
-    "express-rate-limit": "2.0.2",
     "extend": "3.0.0",
     "got": "6.5.0",
     "gulp": "3.9.0",

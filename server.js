@@ -1,7 +1,6 @@
 const debug = require('debug')('server');
 
 const express = require('express');
-const limiter = require('express-rate-limit');
 const compression = require('compression');
 
 // Start a new initServer, set it up and return it.
@@ -18,7 +17,7 @@ module.exports.init = () => {
 	// compress everything
 	server.use(compression());
 
-	server.get('/', getRateLimiter('index'), (req, res) => {
+	server.get('/', (req, res) => {
 		res.sendFile('index.html', { root: 'public' });
 	});
 
@@ -37,26 +36,4 @@ function fourOfour(req, res){
 
 	// otherwise simply send a 404
 	res.status(404).end();
-}
-
-function getRateLimiter(route){
-
-	var limiters = {
-
-		index: {
-			windowMs: 1000 * 60,      // cache request ips for a minute
-			max: 6,                   // block the seventh request
-			delayAfter: 3,            // delay the fourth request
-			delayMs: 5000
-		}
-
-	};
-
-	// empty middleware for production non-debug instances
-	if (process.env.DEBUG || process.env.NODE_ENV !== 'production') return (req, res, next) => { next(); };
-
-	// every 30 minutes, allow only a single request
-	// than only send status 429 "Too Many Requests"
-	return limiter(limiters[route]);
-
 }
