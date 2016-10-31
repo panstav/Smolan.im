@@ -7,7 +7,7 @@ module.exports = compileJade;
 
 function compileJade(headlines){
 
-	const compiler = pug.compileFile('./client/index.pug', { pretty: process.env.NODE_ENV === 'production' });
+	const compiler = pug.compileFile('./client/index.pug', { pretty: process.env.NODE_ENV !== 'production' });
 
 	const locals = {
 		production: process.env.NODE_ENV === 'production',
