@@ -75,12 +75,24 @@ h3
 	padding-left: .5em
 
 footer
+	position: fixed
+	bottom: 0
+	left: 0
+	right: 0
 	background-color: #FFF
 	border-top: 2px solid $ui
-	text-align: center
 
-	@media (min-width: $mobile)
-		text-align: left
+	.A4
+		@include clear-fix
+		line-height: 1
+		padding: .7em 1em
 
-	p
-		margin: 0
+	span
+		display: inline-block
+	a
+		border-bottom: 1px dashed $text
+
+	.made-by
+		float: right
+	.open-source
+		float: left
