@@ -11,6 +11,17 @@ const extend = require('extend');
 
 const common = require('./common');
 
+gulp.task('clean', () => {
+
+	const publicFiles = [
+		'!public/.gitignore', 'public/*'
+	];
+
+	return gulp.src(publicFiles, { read: false })
+		.pipe(plugins.clean({ force: true }));
+
+});
+
 gulp.task('prep-public-dir', () => {
 
 	const copyPaste = [
@@ -18,7 +29,6 @@ gulp.task('prep-public-dir', () => {
 		'client/logo.png',
 		'client/font-carmela/*',
 		'client/favicons/*',
-		'client/google-analytics.js',
 		'client/robots.txt'
 	];
 
@@ -32,7 +42,7 @@ gulp.task('sass-to-css', () => {
 	return gulp.src('client/index.sass')
 		.pipe(plugins.sass({ outputStyle: process.env.NODE_ENV !== 'production' ? 'nested' : 'compressed' }))
 		.pipe(plugins.rename({ basename: 'styles' }))
-		.pipe(gulp.dest('public'));
+		.pipe(gulp.dest('client/dest'));
 
 });
 
@@ -40,9 +50,9 @@ gulp.task('js-to-js', () => {
 
 	return gulp.src('client/index.js')
 		.pipe(plugins.babel({ presets: ['es2015'] }))
-		.pipe(plugins.uglify({ output: { beautify: process.env.NODE_ENV !== 'production' } }))
+		.pipe(plugins.if(process.env.NODE_ENV === 'production', plugins.uglify()))
 		.pipe(plugins.rename({ basename: 'script' }))
-		.pipe(gulp.dest('public'));
+		.pipe(gulp.dest('client/dest'));
 
 });
 
@@ -61,4 +71,4 @@ gulp.task('generate-sitemap', done => {
 
 });
 
-gulp.task('build', plugins.sequence('prep-public-dir', 'sass-to-css', 'js-to-js', 'generate-sitemap'));
+gulp.task('build', plugins.sequence('clean', 'prep-public-dir', 'sass-to-css', 'js-to-js', 'generate-sitemap'));
