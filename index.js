@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000;
 server.init().listen(port, () => {
 
 	Promise.resolve()
-		.then(crawlHeadlines)
+		// .then(crawlHeadlines)
 		.then(fetchHeadlines)
 		.then(compileJade)
 		.then(() => debug(`Server is up, listening on port ${port}`))
