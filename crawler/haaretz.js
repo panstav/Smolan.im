@@ -37,7 +37,7 @@ function parseHeadlines($){
 			date: $('.t-byline time', container).attr('datetime')
 		};
 
-		mainHeadline.url = domain + mainHeadline.url;
+		if (!mainHeadline.url.includes(domain)) mainHeadline.url = domain + mainHeadline.url;
 		mainHeadline.date = moment(mainHeadline.date, 'DD.MM.YYYY HH:mm').toDate();
 
 		return mainHeadline;
