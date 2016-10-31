@@ -10,7 +10,6 @@ const sitemap = require('sitemap');
 const extend = require('extend');
 
 const common = require('./common');
-const compileJade = require('./compile-jade');
 
 gulp.task('prep-public-dir', () => {
 
