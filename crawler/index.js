@@ -7,8 +7,19 @@ const { version, homepage } = require('../package.json');
 module.exports = crawler;
 
 function crawler(){
-	const promises = Object.keys(requireObj).map(key => crawlAndParse(requireObj[key]));
-	return Promise.all(promises).then(magazinesArr => [].concat(...magazinesArr));
+
+	console.log('Crawling.');
+	
+	// turn files in this directory into promises
+	const promises = Object.keys(requireObj)
+		// parsing the magazines by key
+		.map(key => crawlAndParse(requireObj[key]));
+
+	// finish crawling them
+	return Promise.all(promises)
+		// then spread all found headlines into a single array
+		.then(magazinesArr => [].concat(...magazinesArr));
+
 }
 
 function crawlAndParse(magazine){
