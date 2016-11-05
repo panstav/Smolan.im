@@ -11,7 +11,7 @@ function registerCron(){
 
 	if (process.env.NODE_ENV === 'production'){
 		debug('Registering crawling job');
-		cron.schedule('* */3 * * *', runTask, true);
+		cron.schedule('0 0 */3 * * *', runTask, true);
 	} else {
 		debug('Skipping crawling job for non-production environment');
 	}
