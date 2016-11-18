@@ -55,9 +55,9 @@ function crawlAndParse(magazine){
 		function attachDescription(res){
 			const $ = cheerio.load(res.body);
 
-			const description = 'transform' in magazine.description ?
-				magazine.description.transform($) :
-				$(magazine.description.selector).text();
+			const description = 'transform' in magazine.description
+				? magazine.description.transform($)
+				: $(magazine.description.selector).text();
 
 			headline.description = normalize(description);
 			return headline;
