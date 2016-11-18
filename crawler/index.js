@@ -64,17 +64,23 @@ function crawlAndParse(magazine){
 		}
 	}
 
-}
+	function normalize(description){
 
-function normalize(description){
-	if (description.length === 0) return description;
+		if (!description){
+			console.log('Description is undefined', description);
+			console.log(magazine);
+		}
 
-	description = description.trim();
+		if (description.length === 0) return description;
 
-	// ensure a dot at the end of description paragraph
-	if (description.charAt(description.length-1) !== '.') description += '.';
+		description = description.trim();
 
-	return description;
+		// ensure a dot at the end of description paragraph
+		if (description.charAt(description.length-1) !== '.') description += '.';
+
+		return description;
+	}
+
 }
 
 function attachSource(headlines, sourceName){
