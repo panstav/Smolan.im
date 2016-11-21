@@ -71,7 +71,7 @@ function crawlAndParse(magazine){
 			console.log(magazine);
 		}
 
-		if (description.length === 0) return description;
+		if (!description.length) return description;
 
 		description = description.trim();
 
